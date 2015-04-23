@@ -48,6 +48,8 @@ public:
 		COORD ret = { width, height };
 		return ret;
 	}
+	int getLife(void) const { return life; }
+	void hurt(void) { life--; }
 	friend void DrawObject(Entity& obj);
 };
 #endif

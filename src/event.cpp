@@ -35,7 +35,7 @@ void DetectCollision()
 {
 	deque<Entity>::iterator itr = enemies.begin();
 	while (itr != enemies.end()) {
-		if (isHitten(*itr, PLAYER_BULLET)) {
+		if (isHitten(*itr, PLAYER_BULLET | PLAYER_JUDGE)) {
 			itr->Die();
 		}
 		itr++;
@@ -119,13 +119,39 @@ void MoveBullets() {
 			itr = bullets.erase(itr);
 		}
 	}
+	itr = enemyBullets.begin();
+	while (itr != enemyBullets.end())
+	{
+		itr->Move(0, 1);
+		if (itr->RangeLimit())
+		{
+			WriteState(*itr, ENEMY_BULLET);
+			itr++;
+		}
+		else
+		{
+			itr = enemyBullets.erase(itr);
+		}
+	}
 }
 void EnemyAutoMove()
 {
 	deque<Entity>::iterator itr = enemies.begin();
 	while (itr != enemies.end()) {
 		if (itr->RangeLimit()) {
-			itr->Move(0, 1);
+			UINT32 sw = rand() % 100;
+			if (sw < 70)
+			{
+				if (sw < 50)
+				{
+					bulletSample.SetPos(itr->getPos().X + (itr->getSize().X - 1) / 2, itr->getPos().Y);
+					enemyBullets.push_back(bulletSample);
+				}
+			}
+			else
+			{
+				itr->Move(0, 1);
+			}
 			itr++;
 		}
 		else {

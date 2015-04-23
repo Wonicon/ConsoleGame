@@ -21,10 +21,13 @@ int GameMainLoop()
 		int frameStart = timeGetTime();
 		count++;
 		ClearConsoleBuffer();  // 清空缓冲区
-		if (isHitten(player, 8))  // 判断自机是否碰撞到敌机
-			break;
+		if (isHitten(player, ENEMY_JUDGE | ENEMY_BULLET))  // 判断自机是否碰撞到敌机
+		{
+			player.hurt();
+		}
 
 		if (IsWindowActive()) {  // 在窗口激活时进行以下动态时间
+			CreateEnemy();
 			if (count % 4 == 0) {
 				EnemyAutoMove();
 			}

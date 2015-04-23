@@ -1,7 +1,7 @@
 ﻿#include <assert.h>
 #include <deque>
 #include "draw.h"
-#include "object.h"
+#include "entity.h"
 #include "console.h"
 
 // 绘制字符串
@@ -59,6 +59,8 @@ void DrawScreen(void) {
 	// Hitten
 	sprintf(temp, "Hits %d", hitten);
 	DrawString(SCREEN_WIDTH + 1, line++, temp);
+	sprintf(temp, "Health %d", player.getLife());
+	DrawString(SCREEN_WIDTH + 1, line++, temp);
 	/* 移动物体 */
 
 	// 绘制自机
@@ -67,6 +69,10 @@ void DrawScreen(void) {
 	// 绘制子弹
 	for (deque<Entity>::iterator itr = bullets.begin();
 		itr != bullets.end(); itr++) {
+		DrawObject(*itr);
+	}
+	for (deque<Entity>::iterator itr = enemyBullets.begin();
+		itr != enemyBullets.end(); itr++) {
 		DrawObject(*itr);
 	}
 	

@@ -1,4 +1,4 @@
-#include "object.h"
+#include "entity.h"
 #include <deque>
 using std::deque;
 
@@ -7,7 +7,7 @@ COORD playerPos = { 40, 40 };
 COORD playerSize = { 5, 1 };
 char playerImg[] = "<=#=>";
 
-Entity player(playerPos, playerSize, playerImg, 1, 100);
+Entity player(playerPos, playerSize, playerImg, 1, 1000);
 
 // µÐ»ú
 COORD enemyPos = { 0, 0 };
@@ -25,3 +25,4 @@ Entity bulletSample(bulletPos, bulletSize, bulletImg, 3, 1);
 
 deque<Entity> enemies;
 deque<Entity> bullets;
+deque<Entity> enemyBullets;

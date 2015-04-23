@@ -1,4 +1,4 @@
-﻿#include "object.h"
+﻿#include "entity.h"
 
 #pragma warning(disable : 4996)
 Entity::Entity(COORD &position, COORD &scale, char s[], int v, int _life)

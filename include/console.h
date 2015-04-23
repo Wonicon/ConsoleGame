@@ -7,7 +7,7 @@
 #define JMP_CHAR ' '
 #define WIDTH 80
 #define SCREEN_WIDTH 60
-#define HEIGHT 40
+#define HEIGHT 35
 #define TITLE "Console Invader"
 #define BOUNDARY_CHECK(x, y)\
 	(0 <= x && x < WIDTH && 0 <= y && y < HEIGHT)
