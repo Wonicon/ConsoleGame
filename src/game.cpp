@@ -5,16 +5,20 @@
 #include "game.h"
 
 extern int hitten;
+extern int start;
+int count;
 
 int GameMainLoop()
 {
-	int count = 0;
+	start = timeGetTime();
+	count = 0;
 	hitten = 0;
 	InitState();
 	player.SetPos(SCREEN_WIDTH / 2, HEIGHT / 2);
 	enemies.clear();
 	bullets.clear();
 	while (1) {
+		int s = timeGetTime();
 		count++;
 		ClearConsoleBuffer();  // 清空缓冲区
 		if (isHitten(player, 8))  // 判断自机是否碰撞到敌机

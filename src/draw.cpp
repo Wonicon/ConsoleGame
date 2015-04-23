@@ -37,10 +37,10 @@ void DrawObject(Object& obj) {
 
 
 #include <stdio.h>
-#include <time.h>
-
-extern volatile int start;  // 主循环开始时的clk数
-extern volatile int count;  // 主循环次数
+#include <Windows.h>
+#pragma comment( lib,"winmm.lib" )
+int start = 0;
+extern int count;  // 主循环次数
 extern int hitten; // 消灭敌人数量
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
@@ -51,7 +51,7 @@ void DrawScreen(void) {
 	static char temp[1024];
 	int line = 0;
 	// Fps
-	sprintf(temp, "Fps %d", count * 1000 / (clock() - start + 1));
+	sprintf(temp, "Fps %f", count * 1000.0f / (timeGetTime() - start));
 	DrawString(SCREEN_WIDTH + 1, line++, temp);
 	// Enemies
 	sprintf(temp, "Enemies %d", enemies.size());

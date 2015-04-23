@@ -5,9 +5,6 @@
 #include "event.h"
 #include "game.h"
 
-volatile int start;
-volatile int count = 0;
-
 int main(void)
 {
 	InitConsole();
