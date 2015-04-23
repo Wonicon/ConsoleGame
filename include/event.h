@@ -4,7 +4,7 @@
 #include <windows.h>
 #include "draw.h"
 
-class Object;
+class Entity;
 class Bullet;
 
 extern HWND	hWin;
@@ -28,7 +28,7 @@ void EnemyAutoMove();
 // 碰撞判断等常规事件处理
 void CommonEvents();
 // 判断指定的对象是否与被 label 标识的对象产生碰撞
-bool isHitten(const Object& obj, int label);
+bool isHitten(const Entity& obj, int label);
 // 初始化点阵状态
 void InitState();
 #endif

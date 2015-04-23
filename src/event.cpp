@@ -11,7 +11,9 @@ void InitState()
 {
 	memset(State, 0, sizeof(State));
 }
-void WriteState(const Object& obj, int state) {
+
+void WriteState(const Entity& obj, int state)
+{
 	COORD pos = obj.getPos();
 	COORD size = obj.getSize();
 	for (int j = pos.Y; j < pos.Y + size.Y; j++) {
@@ -23,14 +25,15 @@ void WriteState(const Object& obj, int state) {
 }
 void RefreshEnemyState()
 {
-	deque<Object>::iterator itr = enemies.begin();
+	deque<Entity>::iterator itr = enemies.begin();
 	while (itr != enemies.end()) {
 		WriteState(*itr, ENEMY_JUDGE);
 		itr++;
 	}
 }
-void DetectCollision() {
-	deque<Object>::iterator itr = enemies.begin();
+void DetectCollision()
+{
+	deque<Entity>::iterator itr = enemies.begin();
 	while (itr != enemies.end()) {
 		if (isHitten(*itr, PLAYER_BULLET)) {
 			itr->Die();
@@ -38,7 +41,8 @@ void DetectCollision() {
 		itr++;
 	}
 }
-bool isHitten(const Object& obj, int label) {
+bool isHitten(const Entity& obj, int label)
+{
 	COORD pos = obj.getPos();
 	COORD size = obj.getSize();
 	for (int j = pos.Y; j < pos.Y + size.Y; j++) {
@@ -104,7 +108,7 @@ void CreateEnemy() {
 	}
 }
 void MoveBullets() {
-	deque<Object>::iterator itr = bullets.begin();
+	deque<Entity>::iterator itr = bullets.begin();
 	while (itr != bullets.end()) {
 		itr->Move(0, -1);
 		if (itr->RangeLimit()) {
@@ -118,7 +122,7 @@ void MoveBullets() {
 }
 void EnemyAutoMove()
 {
-	deque<Object>::iterator itr = enemies.begin();
+	deque<Entity>::iterator itr = enemies.begin();
 	while (itr != enemies.end()) {
 		if (itr->RangeLimit()) {
 			itr->Move(0, 1);
@@ -131,7 +135,7 @@ void EnemyAutoMove()
 }
 int EraseDeadEnemies()
 {
-	deque<Object>::iterator itr = enemies.begin();
+	deque<Entity>::iterator itr = enemies.begin();
 	int cnt = 0;
 	while (itr != enemies.end()) {
 		if (itr->isAlive()) {
@@ -144,8 +148,6 @@ int EraseDeadEnemies()
 	}
 	return cnt;
 }
-
-
 void CommonEvents() {
 	InitState();
 	WriteState(player, PLAYER_JUDGE);

@@ -4,6 +4,7 @@
 #include "object.h"
 #include "console.h"
 #include "spirit.h"
+#include "fps.h"
 
 // 绘制字符串
 void DrawString(int x, int y, const char *str) 
@@ -24,7 +25,8 @@ void RepDrawColumn(int x, int y, int n, char ch)
 	WriteColumn(x, y, p, strlen(p), DEFAULT_ATTR);
 }
 // 绘制单个对象
-void DrawObject(Object& obj) {
+void DrawObject(Entity& obj)
+{
 	CHAR_INFO buf[WIDTH * HEIGHT];
 	COORD pos = { obj.x, obj.y };
 	COORD sz = { obj.width, obj.height };
@@ -38,9 +40,7 @@ void DrawObject(Object& obj) {
 
 #include <stdio.h>
 #include <Windows.h>
-#pragma comment( lib,"winmm.lib" )
-int start = 0;
-extern int count;  // 主循环次数
+
 extern int hitten; // 消灭敌人数量
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
@@ -51,7 +51,9 @@ void DrawScreen(void) {
 	static char temp[1024];
 	int line = 0;
 	// Fps
-	sprintf(temp, "Fps %f", count * 1000.0f / (timeGetTime() - start));
+	static CFPS Fps;
+	Fps.UpdateFPS();
+	sprintf(temp, "Fps %f", Fps.GetFps());
 	DrawString(SCREEN_WIDTH + 1, line++, temp);
 	// Enemies
 	sprintf(temp, "Enemies %d", enemies.size());
@@ -68,13 +70,13 @@ void DrawScreen(void) {
 	DrawObject(player);
 
 	// 绘制子弹
-	for (deque<Object>::iterator itr = bullets.begin();
+	for (deque<Entity>::iterator itr = bullets.begin();
 		itr != bullets.end(); itr++) {
 		DrawObject(*itr);
 	}
 	
 	// 绘制敌人
-	for (deque<Object>::iterator itr = enemies.begin();
+	for (deque<Entity>::iterator itr = enemies.begin();
 		itr != enemies.end(); itr++) {
 		DrawObject(*itr);
 	}

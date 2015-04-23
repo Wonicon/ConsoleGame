@@ -7,10 +7,10 @@
 #define DEFAULT_ATTR \
 (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED)
 
-class Object;
+class Entity;
 void DrawString(int x, int y, const char *str);
 void DrawColumn(int x, int y, const char *str);
 void RepDrawColumn(int x, int y, int n, char ch);
-void DrawObject(Object& obj);
+void DrawObject(Entity& obj);
 void DrawScreen();
 #endif

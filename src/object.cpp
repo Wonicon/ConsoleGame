@@ -1,7 +1,7 @@
 ﻿#include "object.h"
 
 #pragma warning(disable : 4996)
-Object::Object(COORD &position, COORD &scale, char s[], int v, int _life)
+Entity::Entity(COORD &position, COORD &scale, char s[], int v, int _life)
 {
 	x = position.X;
 	y = position.Y;
@@ -13,7 +13,7 @@ Object::Object(COORD &position, COORD &scale, char s[], int v, int _life)
 }
 
 #pragma warning(disable : 4996)
-Object::Object(const Object& obj)
+Entity::Entity(const Entity& obj)
 {
 	x = obj.x;
 	y = obj.y;
@@ -23,7 +23,7 @@ Object::Object(const Object& obj)
 	life = obj.life;
 	strcpy(image, obj.image);
 }
-bool Object::RangeLimit(void)
+bool Entity::RangeLimit(void)
 {
 	bool flag = true;
 	if (x < 0) {
@@ -44,7 +44,7 @@ bool Object::RangeLimit(void)
 	}
 	return flag;
 }
-bool Object::isInWindow(COORD pos, COORD window)
+bool Entity::isInWindow(COORD pos, COORD window)
 {
 	int left = x - pos.X;
 	int right = pos.X + window.X - x - width;

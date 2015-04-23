@@ -6,7 +6,7 @@
 #include "console.h"
 #include "event.h"
 
-class Object {
+class Entity {
 private:
 	int x;
 	int y;
@@ -17,8 +17,8 @@ private:
 #define BUFFER_MAX (1008)
 	char image[BUFFER_MAX];
 public:
-	Object(COORD &position, COORD &scale, char s[], int v, int life);
-	Object(const Object& obj);
+	Entity(COORD &position, COORD &scale, char s[], int v, int life);
+	Entity(const Entity& obj);
 	void Move(int xx, int yy)
 	{
 		x += xx;
@@ -48,6 +48,6 @@ public:
 		COORD ret = { width, height };
 		return ret;
 	}
-	friend void DrawObject(Object& obj);
+	friend void DrawObject(Entity& obj);
 };
 #endif

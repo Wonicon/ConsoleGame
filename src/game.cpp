@@ -4,13 +4,11 @@
 #include "event.h"
 #include "game.h"
 
-extern int hitten;
-extern int start;
 int count;
+extern int hitten;
 
 int GameMainLoop()
 {
-	start = timeGetTime();
 	count = 0;
 	hitten = 0;
 	InitState();
@@ -38,7 +36,6 @@ int GameMainLoop()
 		DrawScreen();
 
 		RedrawConsole();
-
 		Sleep(10);
 	}
 	return 0;

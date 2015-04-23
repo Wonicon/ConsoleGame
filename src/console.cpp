@@ -12,6 +12,7 @@ static HANDLE     hStdin;                  // 控制台输入句柄
 static HANDLE     hStdout;                 // 控制台输出句柄
 static HWND       hWin;                    // 窗口句柄
 static CHAR_INFO  buffer[HEIGHT * WIDTH];  // 字符缓冲区
+static char       screen[HEIGHT * WIDTH];  // 屏幕字符缓冲区
 
 void InitConsole(void)
 {
