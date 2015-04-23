@@ -3,11 +3,12 @@
 #include "console.h"
 #include <stdlib.h>
 
-volatile int hitten = 0;
+int hitten = 0;
 static int State[HEIGHT * WIDTH];
 
 
-void InitCharState() {
+void InitState()
+{
 	memset(State, 0, sizeof(State));
 }
 void WriteState(const Object& obj, int state) {
@@ -146,7 +147,7 @@ int EraseDeadEnemies()
 
 
 void CommonEvents() {
-	InitCharState();
+	InitState();
 	WriteState(player, PLAYER_JUDGE);
 	MoveBullets();
 	RefreshEnemyState();

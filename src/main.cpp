@@ -1,8 +1,9 @@
 ﻿#include <windows.h>
 #include <stdio.h>
-#include <time.h>
-#include "spirit.h"
+#include "console.h"
+#include "draw.h"
 #include "event.h"
+#include "game.h"
 
 volatile int start;
 volatile int count = 0;
@@ -10,36 +11,13 @@ volatile int count = 0;
 int main(void)
 {
 	InitConsole();
-	int slp = 10;
 	while (1) {
-		count++;
+		GameMainLoop();
 
 		ClearConsoleBuffer();
-		if (isHitten(player, 8)) {
-			break;
-		}
-
-		if (IsWindowActive()) {
-			if (count % 4 == 0) {
-				EnemyAutoMove();
-				
-			}
-			if (count % 2 == 0) {
-				CreateEnemy();
-				FireBullet(0x5A);
-			}
-			PlayerMovement();
-		}
-
-		CommonEvents();
-		DrawScreen();
-
+		DrawString(0, 0, "You are dead");
 		RedrawConsole();
-
-		Sleep(10);
+		while (!IsKeyPressed(VK_RETURN));
 	}
-	RedrawConsole();
-	printf("You are dead!\n");
-	system("pause");
 	return 0;
 }

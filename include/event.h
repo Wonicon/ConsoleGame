@@ -29,4 +29,6 @@ void EnemyAutoMove();
 void CommonEvents();
 // 判断指定的对象是否与被 label 标识的对象产生碰撞
 bool isHitten(const Object& obj, int label);
+// 初始化点阵状态
+void InitState();
 #endif

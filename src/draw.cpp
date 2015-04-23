@@ -41,7 +41,7 @@ void DrawObject(Object& obj) {
 
 extern volatile int start;  // 主循环开始时的clk数
 extern volatile int count;  // 主循环次数
-extern volatile int hitten; // 消灭敌人数量
+extern int hitten; // 消灭敌人数量
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
 void DrawScreen(void) {
