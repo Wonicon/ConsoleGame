@@ -3,9 +3,11 @@
 #include "spirit.h"
 #include "event.h"
 #include "game.h"
+#include "fps.h"
 
 int count;
 extern int hitten;
+extern CFPS Fps;
 
 int GameMainLoop()
 {
@@ -16,7 +18,7 @@ int GameMainLoop()
 	enemies.clear();
 	bullets.clear();
 	while (1) {
-		int s = timeGetTime();
+		int frameStart = timeGetTime();
 		count++;
 		ClearConsoleBuffer();  // 清空缓冲区
 		if (isHitten(player, 8))  // 判断自机是否碰撞到敌机
@@ -36,7 +38,7 @@ int GameMainLoop()
 		DrawScreen();
 
 		RedrawConsole();
-		Sleep(10);
+		while ((timeGetTime() - frameStart) < 15);
 	}
 	return 0;
 }

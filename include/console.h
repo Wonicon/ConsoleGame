@@ -12,6 +12,7 @@
 #define BOUNDARY_CHECK(x, y)\
 	(0 <= x && x < WIDTH && 0 <= y && y < HEIGHT)
 
+typedef char CHAR;
 /* 涉及系统功能 */
 void InitConsole(void);
 bool IsWindowActive(void);
@@ -21,11 +22,9 @@ void RedrawConsole(void);
 void ClearConsoleBuffer(void);
 // 下面的写入缓冲区函数与 draw*函数 在功能上大体相当，但是参数更多
 // 多样的形式在 draw*函数里设定
-void WriteChar(COORD pos, CHAR_INFO ch);
-void WriteString(int x, int y, const char *str, int len, int attr);
-void WriteColumn(int x, int y, const char *str, int len, int attr);
-void WriteBlock(COORD pos, COORD size, CHAR_INFO str[]);
-void ModifyAttribute(COORD pos, int attr);
-
+void WriteChar(COORD pos, CHAR ch);
+void WriteString(int x, int y, CHAR str[]);
+void WriteColumn(int x, int y, CHAR str[]);
+void WriteBlock(int x, int y, int height, int width, CHAR str[]);
 
 #endif

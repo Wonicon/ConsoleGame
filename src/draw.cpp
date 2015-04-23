@@ -3,18 +3,16 @@
 #include "draw.h"
 #include "object.h"
 #include "console.h"
-#include "spirit.h"
-#include "fps.h"
 
 // 绘制字符串
-void DrawString(int x, int y, const char *str) 
+void DrawString(int x, int y, CHAR str[]) 
 {
-	WriteString(x, y, str, strlen(str), DEFAULT_ATTR);
+	WriteString(x, y, str);
 }
 // 竖向绘制字符串
-void DrawColumn(int x, int y, const char *str)
+void DrawColumn(int x, int y, CHAR str[])
 {
-	WriteColumn(x, y, str, strlen(str), DEFAULT_ATTR);
+	WriteColumn(x, y, str);
 }
 // 竖向输出重复字符
 void RepDrawColumn(int x, int y, int n, char ch)
@@ -22,36 +20,33 @@ void RepDrawColumn(int x, int y, int n, char ch)
 	char *p = new char[n + 1];
 	memset(p, ch, n);
 	p[n] = '\0';
-	WriteColumn(x, y, p, strlen(p), DEFAULT_ATTR);
+	WriteColumn(x, y, p);
+	free(p);
 }
 // 绘制单个对象
 void DrawObject(Entity& obj)
 {
-	CHAR_INFO buf[WIDTH * HEIGHT];
-	COORD pos = { obj.x, obj.y };
-	COORD sz = { obj.width, obj.height };
-	for (int i = 0; i < obj.width * obj.height; i++) {
-		buf[i].Char.AsciiChar = obj.image[i];
-		buf[i].Attributes = DEFAULT_ATTR;
-	}
-	WriteBlock(pos, sz, buf);
+	WriteBlock(obj.x, obj.y, obj.height, obj.width, obj.image);
 }
 
 
 #include <stdio.h>
 #include <Windows.h>
+#include "spirit.h"
+#include "fps.h"
 
 extern int hitten; // 消灭敌人数量
+CFPS Fps;
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
 void DrawScreen(void) {
+	DrawString(0, 0, "hello, world");
 	RepDrawColumn(SCREEN_WIDTH, 0, HEIGHT, '|');
 
 	/* 输出文字信息 */
 	static char temp[1024];
 	int line = 0;
 	// Fps
-	static CFPS Fps;
 	Fps.UpdateFPS();
 	sprintf(temp, "Fps %f", Fps.GetFps());
 	DrawString(SCREEN_WIDTH + 1, line++, temp);

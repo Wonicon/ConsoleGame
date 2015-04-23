@@ -2,17 +2,15 @@
 #include <Windows.h>
 #include <assert.h>
 
-
 SMALL_RECT windowSize = { 0, 0, WIDTH - 1, HEIGHT - 1 };
 COORD bufferSize = { WIDTH, HEIGHT };
 COORD charBufferSize = { WIDTH, HEIGHT };
 COORD InitPos = { 0, 0 };
 
-static HANDLE     hStdin;                  // 控制台输入句柄
-static HANDLE     hStdout;                 // 控制台输出句柄
-static HWND       hWin;                    // 窗口句柄
-static CHAR_INFO  buffer[HEIGHT * WIDTH];  // 字符缓冲区
-static char       screen[HEIGHT * WIDTH];  // 屏幕字符缓冲区
+static HANDLE hStdin;                  // 控制台输入句柄
+static HANDLE hStdout;                 // 控制台输出句柄
+static HWND   hWin;                    // 窗口句柄
+static CHAR   screen[HEIGHT * WIDTH];  // 屏幕字符缓冲区
 
 void InitConsole(void)
 {
@@ -26,9 +24,7 @@ void InitConsole(void)
 
 	SetConsoleScreenBufferSize(hStdout, bufferSize);
 	SetConsoleTitleA(TITLE);
-	if (SetConsoleWindowInfo(hStdout, TRUE, &windowSize)) {
-		//assert(0);
-	}
+	SetConsoleWindowInfo(hStdout, TRUE, &windowSize);
 }
 // 检测当前窗口是否激活
 bool IsWindowActive(void)
@@ -38,62 +34,49 @@ bool IsWindowActive(void)
 // 重绘缓冲区
 void RedrawConsole(void)
 {
-	WriteConsoleOutputA(hStdout, buffer, bufferSize, InitPos, &windowSize);
+	DWORD rst;
+	SetConsoleCursorPosition(hStdout, { 0, 0 });
+	WriteConsoleA(hStdout, screen, HEIGHT * WIDTH - 1, &rst, NULL);
+	//assert(rst == HEIGHT * WIDTH);
 }
 // 写入缓冲区
-void WriteChar(int x, int y, CHAR_INFO ch)
+void WriteChar(int x, int y, CHAR ch)
 {
-	assert(BOUNDARY_CHECK(x, y));
-	buffer[x + y * WIDTH] = ch;
+	screen[x + y * WIDTH] = ch;
 }
 // 绘制字符串
-void WriteString(int x, int y, const char *str, int len, int attr)
+void WriteString(int x, int y, CHAR str[])
 {
-	CHAR_INFO ch;
-	ch.Attributes = attr;
 	int index = x + y * WIDTH;
-	assert(0 <= index && index + len <= WIDTH * HEIGHT);
-	for (int i = 0; i < len; i++) {
-		ch.Char.INPUT_CHAR = *str++;
-		buffer[index++] = ch;
-	}
+	memcpy(screen + index, str, strlen(str));
 }
 // 绘制竖线
-void WriteColumn(int x, int y, const char *str, int len, int attr)
+void WriteColumn(int x, int y, CHAR str[])
 {
-	CHAR_INFO ch;
-	ch.Attributes = attr;
 	int index = x + y * WIDTH;
-	assert(0 <= index && index + len <= WIDTH * HEIGHT);
+	int len = strlen(str);
 	for (int i = 0; i < len; i++) {
-		ch.Char.AsciiChar = *str++;
-		buffer[index] = ch;
+		screen[index] = *str++;
 		index += WIDTH;
 	}
 }
 // 绘制矩形
-void WriteBlock(COORD pos, COORD size, CHAR_INFO str[])
+void WriteBlock(int x, int y, int height, int width, CHAR str[])
 {
-	int index = pos.X + pos.Y * WIDTH;
+	int index = x + y * WIDTH;
 	int i = 0;
-	for (int y = 0; y < size.Y; y++) {
-		for (int x = 0; x < size.X; x++) {
-			if (str[i].Char.AsciiChar != JMP_CHAR) {
-				buffer[index + x] = str[i];
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			if (str[i] != JMP_CHAR) {
+				screen[index + x] = str[i];
 			}
 			i++;
 		}
 		index += WIDTH;
 	}
 }
-// 修改属性
-void ModifyAttribute(int x, int y, int attr)
-{
-	assert(BOUNDARY_CHECK(x, y));
-	buffer[x + y * WIDTH].Attributes = attr;
-}
 // 清空缓冲区
 void ClearConsoleBuffer(void)
 {
-	memset(buffer, 0, WIDTH * HEIGHT * sizeof(CHAR_INFO));
+	memset(screen, 0, WIDTH * HEIGHT);
 }
