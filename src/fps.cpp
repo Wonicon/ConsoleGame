@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include "fps.h"
 
 CFPS::CFPS(void)

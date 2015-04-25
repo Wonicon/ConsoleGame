@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 #pragma comment( lib,"winmm.lib" )
 class CFPS
 {
 public:
 	CFPS(void);
-	void UpdateFPS(void);  // Ë¢ÐÂÊ±¼ä
+	void UpdateFPS(void);  // åˆ·æ–°æ—¶é—´
 	int GetLastTime(void) { return lastTime; }
 	float GetFps(void) { return fps; }
 	float GetPast(void) { return past; }
 private:
-	int startTime;   // ÆðÊ¼Ê±¼ä(ms)
-	int lastTime;    // ÉÏ´Î¸üÐÂµÄÊ±¼ä(ms)
-	int nFrames;     // ×ÜÖ¡Êý
-	int lastFrames;  // ÉÏ´Î¸üÐÂµÄ×ÜÖ¡Êý
+	int startTime;   // èµ·å§‹æ—¶é—´(ms)
+	int lastTime;    // ä¸Šæ¬¡æ›´æ–°çš„æ—¶é—´(ms)
+	int nFrames;     // æ€»å¸§æ•°
+	int lastFrames;  // ä¸Šæ¬¡æ›´æ–°çš„æ€»å¸§æ•°
 	float fps;
 	float past;
 };
