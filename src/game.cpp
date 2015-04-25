@@ -44,3 +44,4 @@ int GameMainLoop()
 	}
 	return 0;
 }
+

@@ -26,3 +26,4 @@ Entity bulletSample(bulletPos, bulletSize, bulletImg, 3, 1);
 deque<Entity> enemies;
 deque<Entity> bullets;
 deque<Entity> enemyBullets;
+

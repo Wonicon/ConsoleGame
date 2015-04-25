@@ -8,3 +8,4 @@ void DrawColumn(int x, int y, CHAR str[]);
 void RepDrawColumn(int x, int y, int n, CHAR ch);
 void DrawObject(Entity& obj);
 void DrawScreen();
+

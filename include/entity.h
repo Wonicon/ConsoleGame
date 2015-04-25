@@ -52,3 +52,4 @@ public:
 	void hurt(void) { life--; }
 	friend void DrawObject(Entity& obj);
 };
+

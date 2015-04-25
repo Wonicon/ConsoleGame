@@ -81,3 +81,4 @@ void ClearConsoleBuffer(void)
 {
 	memset(screen, 0, WIDTH * HEIGHT);
 }
+

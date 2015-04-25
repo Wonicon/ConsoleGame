@@ -244,3 +244,4 @@ void CommonEvents() {
 	DetectCollision();
 	EraseDeadEnemies();
 }
+

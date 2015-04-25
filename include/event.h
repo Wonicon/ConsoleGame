@@ -30,3 +30,4 @@ void CommonEvents();
 bool isHitten(const Entity& obj, int label);
 // 初始化点阵状态
 void InitState();
+

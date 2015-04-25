@@ -16,3 +16,4 @@ private:
 	float fps;
 	float past;
 };
+

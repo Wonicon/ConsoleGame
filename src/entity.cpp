@@ -52,3 +52,4 @@ bool Entity::isInWindow(COORD pos, COORD window)
 	int down = pos.Y + window.Y - y - height;
 	return left >= 0 && right >= 0 && up >= 0 && down >= 0;
 }
+
