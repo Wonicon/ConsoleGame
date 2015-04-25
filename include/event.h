@@ -1,5 +1,4 @@
-﻿#ifndef __KEY_EVENT_H__
-#define __KEY_EVENT_H__
+﻿#pragma once
 
 #include <windows.h>
 #include "draw.h"
@@ -31,4 +30,3 @@ void CommonEvents();
 bool isHitten(const Entity& obj, int label);
 // 初始化点阵状态
 void InitState();
-#endif

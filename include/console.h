@@ -1,6 +1,4 @@
-﻿#ifndef __CONSOLE_H__
-#define __CONSOLE_H__
-
+﻿#pragma once
 #include <Windows.h>
 
 #define INPUT_CHAR AsciiChar
@@ -26,5 +24,3 @@ void WriteChar(COORD pos, CHAR ch);
 void WriteString(int x, int y, CHAR str[]);
 void WriteColumn(int x, int y, CHAR str[]);
 void WriteBlock(int x, int y, int height, int width, CHAR str[]);
-
-#endif

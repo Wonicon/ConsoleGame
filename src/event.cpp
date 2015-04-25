@@ -1,5 +1,5 @@
 ﻿#include "event.h"
-#include "spirit.h"
+#include "sprite.h"
 #include "console.h"
 #include <stdlib.h>
 

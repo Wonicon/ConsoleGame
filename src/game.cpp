@@ -1,6 +1,6 @@
 ﻿#include <stdio.h>
 #include <time.h>
-#include "spirit.h"
+#include "sprite.h"
 #include "event.h"
 #include "game.h"
 #include "fps.h"
@@ -41,7 +41,6 @@ int GameMainLoop()
 		DrawScreen();
 
 		RedrawConsole();
-		//while ((timeGetTime() - frameStart) < 15);
 	}
 	return 0;
 }

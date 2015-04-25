@@ -1,5 +1,5 @@
-﻿#ifndef __OBJ_H__
-#define __OBJ_H__
+﻿#pragma once
+
 #include <windows.h>
 #include <assert.h>
 #include <string.h>
@@ -52,4 +52,3 @@ public:
 	void hurt(void) { life--; }
 	friend void DrawObject(Entity& obj);
 };
-#endif

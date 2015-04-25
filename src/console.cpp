@@ -35,6 +35,8 @@ bool IsWindowActive(void)
 void RedrawConsole(void)
 {
 	DWORD rst;
+	static COORD P = { 0, 0 };
+	SetConsoleCursorPosition(hStdout, P);
 	WriteConsoleA(hStdout, screen, HEIGHT * WIDTH - 1, &rst, NULL);
 	//assert(rst == HEIGHT * WIDTH);
 }

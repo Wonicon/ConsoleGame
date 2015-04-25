@@ -1,3 +1,5 @@
+#pragma once
+
 #include <deque>
 #include "entity.h"
 using std::deque;

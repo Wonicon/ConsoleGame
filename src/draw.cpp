@@ -32,7 +32,7 @@ void DrawObject(Entity& obj)
 
 #include <stdio.h>
 #include <Windows.h>
-#include "spirit.h"
+#include "sprite.h"
 #include "fps.h"
 
 extern int hitten; // 消灭敌人数量
