@@ -136,15 +136,15 @@ void PlayerMovement()
 
 	if (flags != 0) {
 		if (y > HEIGHT - player.getSize().Y)
-			y = (double)(HEIGHT - player.getSize().Y);
+			y = (float)(HEIGHT - player.getSize().Y);
 		else if (y < 0)
 			y = 0;
 		if (x > SCREEN_WIDTH - player.getSize().X)
-			x = SCREEN_WIDTH - player.getSize().X;
+			x = (float)(SCREEN_WIDTH - player.getSize().X);
 		else if (x < 0)
 			x = 0;
 	}
-	player.SetPos(x, y);
+	player.SetPos((int)x, (int)y);
 
 	static char temp[1024];
 	sprintf(temp, "float x %.4f", x);
