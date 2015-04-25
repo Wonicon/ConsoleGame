@@ -77,24 +77,86 @@ void FireBullet(KEYCODE keycode)
 		bullets.push_back(bulletSample);
 	}
 }
+#include "fps.h"
+#include "draw.h"
+#include "stdio.h"
+#include <math.h>
+extern CFPS Fps;
+#pragma warning(disable : 4996)
 void PlayerMovement()
 {
-	int x, y;
-	x = y = 0;
-	if (IsKeyPressed(VK_DOWN)) {
-		y = 1;
+	static float x = player.getPos().X;
+	static float y = player.getPos().Y;
+	static int preFlags = 0;
+	int speed = 80;
+	int flags = 0; // 上下左右
+	float distance = Fps.GetPast() * speed;
+
+#define U 8
+#define D 4
+#define L 2
+#define R 1
+#define UL (U | L)
+#define UR (U | R)
+#define DL (D | L)
+#define DR (D | R)
+
+	if (IsKeyPressed(VK_UP)) {
+		flags |= U;
 	}
-	else if (IsKeyPressed(VK_UP)) {
-		y = -1;
+	else if (IsKeyPressed(VK_DOWN)) {
+		flags |= D;
 	}
 	if (IsKeyPressed(VK_LEFT)) {
-		x = -1;
+		flags |= L;
 	}
 	else if (IsKeyPressed(VK_RIGHT)) {
-		x = 1;
+		flags |= R;
 	}
-	player.Move(x, y);
-	player.RangeLimit();
+
+	if (preFlags != flags)
+	{
+		x = floor(x);
+		y = floor(y);
+	}
+
+	switch (flags) {
+	case U: y -= distance / 2; break;
+	case D: y += distance / 2; break;
+	case L: x -= distance; break;
+	case R: x += distance; break;
+	case UL: x -= distance; y -= distance; break;
+	case UR: x += distance; y -= distance; break;
+	case DL: x -= distance; y += distance; break;
+	case DR: x += distance; y += distance; break;
+	default: x = floor(x); y = floor(y);
+	}
+	
+	preFlags = flags;
+
+	if (flags != 0) {
+		if (y > HEIGHT - player.getSize().Y)
+			y = (double)(HEIGHT - player.getSize().Y);
+		else if (y < 0)
+			y = 0;
+		if (x > SCREEN_WIDTH - player.getSize().X)
+			x = SCREEN_WIDTH - player.getSize().X;
+		else if (x < 0)
+			x = 0;
+	}
+	player.SetPos(x, y);
+
+	static char temp[1024];
+	sprintf(temp, "float x %.4f", x);
+	DrawString(SCREEN_WIDTH + 1, 10, temp);
+	sprintf(temp, "float y %.4f", y);
+	DrawString(SCREEN_WIDTH + 1, 11, temp);
+	sprintf(temp, "int x %d", (int)x);
+	DrawString(SCREEN_WIDTH + 1, 12, temp);
+	sprintf(temp, "int y %d", (int)y);
+	DrawString(SCREEN_WIDTH + 1, 13, temp);
+	sprintf(temp, "Flag:cur %d pre %d", preFlags, flags);
+	DrawString(SCREEN_WIDTH + 1, 14, temp);
 }
 
 

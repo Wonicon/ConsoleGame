@@ -26,13 +26,13 @@ int GameMainLoop()
 			player.hurt();
 		}
 
-		if (IsWindowActive()) {  // 在窗口激活时进行以下动态时间
+		if (1 || IsWindowActive()) {  // 在窗口激活时进行以下动态时间
 			CreateEnemy();
 			if (count % 4 == 0) {
 				EnemyAutoMove();
 			}
 			if (count % 2 == 0) {
-				CreateEnemy();
+				//CreateEnemy();
 				FireBullet(0x5A);
 			}
 			PlayerMovement();
@@ -41,7 +41,7 @@ int GameMainLoop()
 		DrawScreen();
 
 		RedrawConsole();
-		while ((timeGetTime() - frameStart) < 15);
+		//while ((timeGetTime() - frameStart) < 15);
 	}
 	return 0;
 }
