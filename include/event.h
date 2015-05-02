@@ -13,6 +13,8 @@ typedef int KEYCODE;
 #define PLAYER_JUDGE 2
 #define ENEMY_BULLET 4
 #define ENEMY_JUDGE 8
+#define PRE_STATE 16
+#define NEW_STATE 32
 
 // 判断某键是否按下
 int IsKeyPressed(KEYCODE keycode);
@@ -27,7 +29,7 @@ void EnemyAutoMove();
 // 碰撞判断等常规事件处理
 void CommonEvents();
 // 判断指定的对象是否与被 label 标识的对象产生碰撞
-bool isHitten(const Entity& obj, int label);
+void *isHitten(const Entity& obj, int label);
 // 初始化点阵状态
 void InitState();
 
