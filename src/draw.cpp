@@ -3,12 +3,9 @@
 #include "draw.h"
 #include "entity.h"
 #include "console.h"
-
+#include <stdio.h>
 // 绘制字符串
-void DrawString(int x, int y, CHAR str[]) 
-{
-	WriteString(x, y, str);
-}
+char _drawstring_buffer[1024];
 // 竖向绘制字符串
 void DrawColumn(int x, int y, CHAR str[])
 {
@@ -48,19 +45,14 @@ void DrawScreen(void) {
 	int line = 0;
 	// Fps
 	Fps.UpdateFPS();
-	sprintf(temp, "Fps %f", Fps.GetFps());
-	DrawString(SCREEN_WIDTH + 1, line++, temp);
+	DrawString(SCREEN_WIDTH + 1, line++, "Fps %f", Fps.GetFps());
 	// Enemies
-	sprintf(temp, "Enemies %d", enemies.size());
-	DrawString(SCREEN_WIDTH + 1, line++, temp);
+	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.size());
 	// Bullets
-	sprintf(temp, "Bullets %d", bullets.size());
-	DrawString(SCREEN_WIDTH + 1, line++, temp);
+	DrawString(SCREEN_WIDTH + 1, line++, "Bullets %d", bullets.size());
 	// Hitten
-	sprintf(temp, "Hits %d", hitten);
-	DrawString(SCREEN_WIDTH + 1, line++, temp);
-	sprintf(temp, "Health %d", player.getLife());
-	DrawString(SCREEN_WIDTH + 1, line++, temp);
+	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", hitten);
+	DrawString(SCREEN_WIDTH + 1, line++, "Health %d", player.getLife());
 	/* 移动物体 */
 
 	// 绘制自机

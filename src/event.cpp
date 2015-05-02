@@ -79,16 +79,15 @@ void FireBullet(KEYCODE keycode)
 }
 #include "fps.h"
 #include "draw.h"
-#include "stdio.h"
+#include <stdio.h>
 #include <math.h>
 extern CFPS Fps;
-#pragma warning(disable : 4996)
 void PlayerMovement()
 {
 	static float x = player.getPos().X;
 	static float y = player.getPos().Y;
 	static int preFlags = 0;
-	int speed = 80;
+	int speed = 70;
 	int flags = 0; // 上下左右
 	float distance = Fps.GetPast() * speed;
 
@@ -146,19 +145,12 @@ void PlayerMovement()
 	}
 	player.SetPos((int)x, (int)y);
 
-	static char temp[1024];
-	sprintf(temp, "float x %.4f", x);
-	DrawString(SCREEN_WIDTH + 1, 10, temp);
-	sprintf(temp, "float y %.4f", y);
-	DrawString(SCREEN_WIDTH + 1, 11, temp);
-	sprintf(temp, "int x %d", (int)x);
-	DrawString(SCREEN_WIDTH + 1, 12, temp);
-	sprintf(temp, "int y %d", (int)y);
-	DrawString(SCREEN_WIDTH + 1, 13, temp);
-	sprintf(temp, "Flag:cur %d pre %d", preFlags, flags);
-	DrawString(SCREEN_WIDTH + 1, 14, temp);
+	DrawString(SCREEN_WIDTH + 1, 10, "float x %.4f", x);
+	DrawString(SCREEN_WIDTH + 1, 11, "float y %.4f", y);
+	DrawString(SCREEN_WIDTH + 1, 12, "int x %d", (int)x);
+	DrawString(SCREEN_WIDTH + 1, 13, "int y %d", (int)y);
+	DrawString(SCREEN_WIDTH + 1, 14, "Flag:cur %d pre %d", preFlags, flags);
 }
-
 
 void CreateEnemy() {
 	int a = rand() % 10;
