@@ -35,7 +35,7 @@ void InitConsole(void)
 	SetConsoleScreenBufferSize(hStdout, bufferSize);
 	SetConsoleTitleA(TITLE);
 	SetConsoleWindowInfo(hStdout, TRUE, &windowSize);
-	//SetConsoleOutputCP(437);
+	SetConsoleOutputCP(936);
 }
 // 检测当前窗口是否激活
 bool IsWindowActive(void)

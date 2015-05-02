@@ -109,7 +109,7 @@ void FireBullet()
 			player.getSize(w, h);
 			bulletSample.setPos(x + (w - 1) / 2, y);
 			bulletSample.dir = U;
-			bullets.push_back(bossSample);
+			bullets.push_back(bulletSample);
 			n = 0.0f;
 		}
 		else if (IsKeyPressed(0x58)) {
@@ -151,6 +151,27 @@ void Beam()
 			beampower = MaxPow;
 	}
 }
+
+deque<Entity> bossBullets;
+void Boss()
+{
+	static Entity boss(bossSample);
+	DrawObject(boss);
+	WriteState(boss, ENEMY_JUDGE);
+	int x, y, w, h;
+	boss.getPos(x, y);
+	boss.getSize(w, h);
+
+	enemyBulletSample.dir = DR;
+	enemyBulletSample.setPos(x + 1, y + h);
+	enemyBullets.push_back(enemyBulletSample);
+	enemyBulletSample.dir = DL;
+	enemyBulletSample.setPos(x + w - 1, y + h);
+	enemyBullets.push_back(enemyBulletSample);
+	enemyBulletSample.dir = D;
+	enemyBulletSample.setPos(x + w / 2, y + h);
+	enemyBullets.push_back(enemyBulletSample);
+}
 void PlayerMovement()
 {
 	int dir = 0;
@@ -177,7 +198,7 @@ void EnemyMove()
 	while (itr != enemies.end()) {
 		n += N * Fps.GetPast();
 		UINT32 sw = rand() % 100;
-		if (sw < 5)
+		if (sw < 2)
 		{
 			if (n > 1.0f) {
 				int x, y, w, h;
@@ -259,6 +280,8 @@ void CommonEvents()
 }
 void Movement()
 {
+	if (hitten > 5)
+		Boss();
 	WriteState(player, PLAYER_JUDGE);
 	MoveBullets();
 	EnemyMove();
