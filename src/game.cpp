@@ -9,6 +9,7 @@
 int count;
 extern int hitten;
 extern CFPS Fps;
+int PlayerState = ALIVE;
 
 int GameMainLoop()
 {
@@ -18,29 +19,22 @@ int GameMainLoop()
 	player.setPos(SCREEN_WIDTH / 2, HEIGHT / 2);
 	enemies.clear();
 	bullets.clear();
-	float n = 5.0f;
-	float N = 0.0f;
-	while (1) {
-		ClearConsoleBuffer();  // 清空缓冲区
+	enemyBullets.clear();
+	PlayerState = ALIVE;
+	while (PlayerState == ALIVE) {
 		if (1 || IsWindowActive()) {  // 在窗口激活时进行以下动态时间
-			CreateEnemy();
-			if (count % 4 == 0) {
-				EnemyAutoMove();
-			}
-			PlayerMovement();
-			N += n * Fps.GetPast();
-			DrawString(10, 10, "past %f", Fps.GetPast());
-			DrawString(10, 11, "N %f", N);
-			if (N > 1.0f)
-			{
-				FireBullet(0x5a);
-				N = 0.0f;
-			}
-		}
-		CommonEvents();
-		DrawScreen();
+			ClearConsoleBuffer();  // 清空缓冲区
+			InitState();
 
-		RedrawConsole();
+			CreateEnemy();
+			FireBullet();
+			Beam();
+
+			Movement();
+
+			DrawScreen();
+			RedrawConsole();
+		}
 	}
 	return 0;
 }

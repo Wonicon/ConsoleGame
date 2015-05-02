@@ -6,3 +6,8 @@ int GameMainLoop();
 // TODO 游戏菜单
 int ShowStartMenu();
 
+extern int PlayerState;
+
+#define DEAD 1
+#define ALIVE 2
+#define WIM 3

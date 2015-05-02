@@ -12,7 +12,7 @@ int main(void)
 		GameMainLoop();
 
 		ClearConsoleBuffer();
-		DrawString(0, 0, "You are dead");
+		DrawString((WIDTH - strlen("You are dead")) / 2, HEIGHT / 2, "You are dead");
 		RedrawConsole();
 		while (!IsKeyPressed(VK_RETURN));
 	}

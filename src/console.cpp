@@ -121,3 +121,12 @@ void ClearConsoleBuffer(void)
 #endif
 }
 
+void setConsoleColor(int attr)
+{
+	string_attr = attr;
+}
+
+void resetConsoleColor()
+{
+	string_attr = DEFAULT_STR_ATTR;
+}

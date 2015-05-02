@@ -33,7 +33,7 @@ public:
 	int dir;
 	Entity(int x, int y, int w, int h, int v, int hp, int attack, char img[], int attribute[]);
 	// 根据自身状态移动，返回是否超出屏幕边界
-	bool move(int new_dir);
+	bool move(int new_dir = CONS);
 	void setPos(int x, int y)
 	{
 		real_x = (float)(scr_x = x);

@@ -33,6 +33,7 @@ void DrawObject(Entity& obj)
 
 extern int hitten; // 消灭敌人数量
 CFPS Fps;
+extern float beampower;
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
 void DrawScreen(void) {
@@ -50,7 +51,7 @@ void DrawScreen(void) {
 	DrawString(SCREEN_WIDTH + 1, line++, "Bullets %d", bullets.size());
 	// Hitten
 	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", hitten);
-	DrawString(SCREEN_WIDTH + 1, line++, "Health %d", player.getLife());
+	DrawString(SCREEN_WIDTH + 1, line++, "P %.0f", beampower);
 	/* 移动物体 */
 
 	// 绘制自机

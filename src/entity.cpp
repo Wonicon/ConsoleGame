@@ -52,7 +52,7 @@ bool Entity::isHitWindow(int x0, int y0, int w, int h)
 	int down = y0 + h - scr_y - height;
 	return left >= 0 || right >= 0 || up >= 0 || down >= 0;
 }
-bool Entity::move(int new_dir = CONS)
+bool Entity::move(int new_dir)
 {
 	if (new_dir == CONS)
 		new_dir = dir;
