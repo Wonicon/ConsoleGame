@@ -13,7 +13,7 @@ Entity player(
 	playerImg, playerAttr);
 
 // 敌机
-char enemyImg[] = ">_<";
+char enemyImg[] = "'_'";
 int enemyAttr[] = { FWHITE, FWHITE, FWHITE };
 // 常备一个样本对象，加入容器时似乎避免不了拷贝构造，这样似乎可以把参数的构造析构节省掉？
 Entity enemySample(
@@ -22,6 +22,31 @@ Entity enemySample(
 	30,
 	1, 10, 
 	enemyImg, enemyAttr);
+
+// 敌机Boss
+char bossImg[] =
+"\
+ &  #|#  & \
+-||--|--||-\
+ |-|-|-|-| \
+ |  |||  | \
+ $   V   $ \
+";
+int bossAttr[] =
+{
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+};
+// 常备一个样本对象，加入容器时似乎避免不了拷贝构造，这样似乎可以把参数的构造析构节省掉？
+Entity bossSample(
+	(SCREEN_WIDTH - 11) / 2, 0,
+	11, 5,
+	0,
+	100, 10,
+	bossImg, bossAttr);
 
 // 子弹
 char bulletImg[] = "0";

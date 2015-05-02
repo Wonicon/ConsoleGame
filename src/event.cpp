@@ -109,7 +109,7 @@ void FireBullet()
 			player.getSize(w, h);
 			bulletSample.setPos(x + (w - 1) / 2, y);
 			bulletSample.dir = U;
-			bullets.push_back(bulletSample);
+			bullets.push_back(bossSample);
 			n = 0.0f;
 		}
 		else if (IsKeyPressed(0x58)) {
@@ -127,8 +127,8 @@ void FireBullet()
 }
 void Beam()
 {
-	if (IsKeyPressed(VK_SPACE) && beampower > 2.0f) {
-		if (beampower > 1.0f) {
+	if (IsKeyPressed(VK_SPACE) && beampower > 1.0f) {
+		if (beampower > 2.0f) {
 			setConsoleColor(BWHITE);
 			int x, y, w, h;
 			player.getPos(x, y);
@@ -143,11 +143,12 @@ void Beam()
 			beampower -= MaxPow * Fps.GetPast();
 			resetConsoleColor();
 		}
-		else {
-			beampower += Fps.GetPast();
-			if (beampower > MaxPow)
-				beampower = MaxPow;
-		}
+
+	}
+	else {
+		beampower += Fps.GetPast();
+		if (beampower > MaxPow)
+			beampower = MaxPow;
 	}
 }
 void PlayerMovement()

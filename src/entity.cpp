@@ -56,6 +56,8 @@ bool Entity::move(int new_dir)
 {
 	if (new_dir == CONS)
 		new_dir = dir;
+	else if (new_dir == STOP)
+		return true;
 
 	float distance = Fps.GetPast() * vel;
 
