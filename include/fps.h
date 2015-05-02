@@ -17,3 +17,4 @@ private:
 	float past;
 };
 
+extern CFPS Fps;

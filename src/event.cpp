@@ -2,24 +2,37 @@
 #include "sprite.h"
 #include "console.h"
 #include <stdlib.h>
-
+#include "entity.h"
 int hitten = 0;
-static int State[HEIGHT * WIDTH];
 
+#define NonState 0
+struct StateNode
+{
+	int type;
+	int subtype;
+	void *ref;
+};
+
+static StateNode State[HEIGHT][WIDTH];
 
 void InitState()
 {
-	memset(State, 0, sizeof(State));
+	memset(&State[0][0], 0, sizeof(State));
 }
 
-void WriteState(const Entity& obj, int state)
+void WriteState(Entity& obj, int state)
 {
-	COORD pos = obj.getPos();
-	COORD size = obj.getSize();
-	for (int j = pos.Y; j < pos.Y + size.Y; j++) {
-		for (int i = pos.X; i < pos.X + size.X; i++) {
-			State[j * WIDTH + i] |= state;
-
+	int x, y, w, h;
+	int k = 0;
+	const char *s = obj.getImage();
+	obj.getPos(x, y);
+	obj.getSize(w, h);
+	for (int j = y; j < y + h; j++) {
+		for (int i = x; i < x + w; i++) {
+			if (s[k++] != JMP_CHAR) {
+				State[j][i].type = state;
+				State[j][i].ref = &obj;
+			}
 		}
 	}
 }
@@ -34,28 +47,30 @@ void RefreshEnemyState()
 void DetectCollision()
 {
 	deque<Entity>::iterator itr = enemies.begin();
+	void *aim;
 	while (itr != enemies.end()) {
-		if (isHitten(*itr, PLAYER_BULLET | PLAYER_JUDGE)) {
-			itr->Die();
+		if (aim = isHitten(*itr, PLAYER_BULLET))
+		{
+			itr->die();
 		}
 		itr++;
 	}
 }
-bool isHitten(const Entity& obj, int label)
+
+void *isHitten(const Entity& obj, int label)
 {
-	COORD pos = obj.getPos();
-	COORD size = obj.getSize();
-	for (int j = pos.Y; j < pos.Y + size.Y; j++) {
-		for (int i = pos.X; i < pos.X + size.X; i++) {
-			if (State[j * WIDTH + i] & label) {
-				hitten++;
-				return true;
+	int x, y, w, h;
+	obj.getPos(x, y);
+	obj.getSize(w, h);
+	for (int j = y; j < y + h; j++) {
+		for (int i = x; i < x + w; i++) {
+			if (State[j][i].type == label) {
+				return State[j][i].ref;
 			}
 		}
 	}
-	return false;
+	return NULL;
 }
-
 
 int IsKeyPressed(KEYCODE keycode)
 {
@@ -70,10 +85,11 @@ int IsKeyPressed(KEYCODE keycode)
 void FireBullet(KEYCODE keycode)
 {
 	short state = GetAsyncKeyState(keycode);
-	if ((state & 0x8000) == 0x8000) {
-		COORD playerPos = player.getPos();
-		COORD playerSize = player.getSize();
-		bulletSample.SetPos(playerPos.X + (playerSize.X - 1) / 2, playerPos.Y);
+	if ((state & 0x8000) == 0x8000 || 1) {
+		int x, y, w, h;
+		player.getPos(x, y);
+		player.getSize(w, h);
+		bulletSample.setPos(x + (w - 1) / 2, y);
 		bullets.push_back(bulletSample);
 	}
 }
@@ -84,88 +100,37 @@ void FireBullet(KEYCODE keycode)
 extern CFPS Fps;
 void PlayerMovement()
 {
-	static float x = player.getPos().X;
-	static float y = player.getPos().Y;
-	static int preFlags = 0;
-	int speed = 70;
-	int flags = 0; // 上下左右
-	float distance = Fps.GetPast() * speed;
-
-#define U 8
-#define D 4
-#define L 2
-#define R 1
-#define UL (U | L)
-#define UR (U | R)
-#define DL (D | L)
-#define DR (D | R)
-
+	int dir = 0;
 	if (IsKeyPressed(VK_UP)) {
-		flags |= U;
+		dir |= U;
 	}
 	else if (IsKeyPressed(VK_DOWN)) {
-		flags |= D;
+		dir |= D;
 	}
 	if (IsKeyPressed(VK_LEFT)) {
-		flags |= L;
+		dir |= L;
 	}
 	else if (IsKeyPressed(VK_RIGHT)) {
-		flags |= R;
+		dir |= R;
 	}
-
-	if (preFlags != flags)
-	{
-		x = floor(x);
-		y = floor(y);
-	}
-
-	switch (flags) {
-	case U: y -= distance / 2; break;
-	case D: y += distance / 2; break;
-	case L: x -= distance; break;
-	case R: x += distance; break;
-	case UL: x -= distance; y -= distance; break;
-	case UR: x += distance; y -= distance; break;
-	case DL: x -= distance; y += distance; break;
-	case DR: x += distance; y += distance; break;
-	default: x = floor(x); y = floor(y);
-	}
-	
-	preFlags = flags;
-
-	if (flags != 0) {
-		if (y > HEIGHT - player.getSize().Y)
-			y = (float)(HEIGHT - player.getSize().Y);
-		else if (y < 0)
-			y = 0;
-		if (x > SCREEN_WIDTH - player.getSize().X)
-			x = (float)(SCREEN_WIDTH - player.getSize().X);
-		else if (x < 0)
-			x = 0;
-	}
-	player.SetPos((int)x, (int)y);
-
-	DrawString(SCREEN_WIDTH + 1, 10, "float x %.4f", x);
-	DrawString(SCREEN_WIDTH + 1, 11, "float y %.4f", y);
-	DrawString(SCREEN_WIDTH + 1, 12, "int x %d", (int)x);
-	DrawString(SCREEN_WIDTH + 1, 13, "int y %d", (int)y);
-	DrawString(SCREEN_WIDTH + 1, 14, "Flag:cur %d pre %d", preFlags, flags);
+	player.move(dir);
 }
 
 void CreateEnemy() {
 	int a = rand() % 10;
+	if (enemies.size() > 5)
+		return;
 	if (a == 5) {
 		int x = rand() % (SCREEN_WIDTH - 3);
 		int y = 0;
-		enemySample.SetPos(x, y);
+		enemySample.setPos(x, y);
 		enemies.push_back(enemySample);
 	}
 }
 void MoveBullets() {
 	deque<Entity>::iterator itr = bullets.begin();
 	while (itr != bullets.end()) {
-		itr->Move(0, -1);
-		if (itr->RangeLimit()) {
+		if (itr->move(U)) {
 			WriteState(*itr, PLAYER_BULLET);
 			itr++;
 		}
@@ -176,8 +141,7 @@ void MoveBullets() {
 	itr = enemyBullets.begin();
 	while (itr != enemyBullets.end())
 	{
-		itr->Move(0, 1);
-		if (itr->RangeLimit())
+		if (itr->move(D))
 		{
 			WriteState(*itr, ENEMY_BULLET);
 			itr++;
@@ -191,26 +155,28 @@ void MoveBullets() {
 void EnemyAutoMove()
 {
 	deque<Entity>::iterator itr = enemies.begin();
+	int x, y, w, h;
 	while (itr != enemies.end()) {
-		if (itr->RangeLimit()) {
-			UINT32 sw = rand() % 100;
-			if (sw < 70)
-			{
-				if (sw < 50)
-				{
-					bulletSample.SetPos(itr->getPos().X + (itr->getSize().X - 1) / 2, itr->getPos().Y);
-					enemyBullets.push_back(bulletSample);
-				}
-			}
-			else
-			{
-				itr->Move(0, 1);
-			}
+		UINT32 sw = rand() % 100;
+		if (sw < 5)
+		{
+			//itr->getPos(x, y);
+			//itr->getSize(w, h);
+			//bulletSample.setPos(x + (w - 1) / 2, y);
+			//enemyBullets.push_back(bulletSample);
+		}
+		else if (sw < 90)
+		{
 			itr++;
 		}
-		else {
-			itr = enemies.erase(itr);
+		else
+		{
+			if (!itr->move(D))
+				itr = enemies.erase(itr);
+			else
+				itr++;
 		}
+		
 	}
 }
 int EraseDeadEnemies()
@@ -229,6 +195,15 @@ int EraseDeadEnemies()
 	return cnt;
 }
 void CommonEvents() {
+	void *aim;
+	if (aim = isHitten(player, ENEMY_JUDGE))  // 判断自机是否碰撞到敌机
+	{
+		player.hurt(*(Entity *)aim);
+	}
+	else if (aim = isHitten(player, ENEMY_BULLET))
+	{
+		player.hurt(*(Entity *)aim);
+	}
 	InitState();
 	WriteState(player, PLAYER_JUDGE);
 	MoveBullets();
@@ -236,4 +211,3 @@ void CommonEvents() {
 	DetectCollision();
 	EraseDeadEnemies();
 }
-

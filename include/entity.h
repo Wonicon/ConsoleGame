@@ -6,50 +6,82 @@
 #include "console.h"
 #include "event.h"
 
+#define STOP 0
+#define CONS (1 << 4)
+#define U 8
+#define D 4
+#define L 2
+#define R 1
+#define UL (U | L)
+#define UR (U | R)
+#define DL (D | L)
+#define DR (D | R)
+
 class Entity {
 private:
-	int x;
-	int y;
-	int width;
-	int height;
-	int speed;
+	float real_x, real_y;
+	int scr_x, scr_y;
+	int width, height;
 	int life;
-#define BUFFER_MAX (1008)
+	int max_life;
+	int atk;
+#define BUFFER_MAX (128)
 	char image[BUFFER_MAX];
+	int attr[BUFFER_MAX];
 public:
-	Entity(COORD &position, COORD &scale, char s[], int v, int life);
-	Entity(const Entity& obj);
-	void Move(int xx, int yy)
+	int vel;
+	int dir;
+	Entity(int x, int y, int w, int h, int v, int hp, int attack, char img[], int attribute[]);
+	// 根据自身状态移动，返回是否超出屏幕边界
+	bool move(int new_dir);
+	void setPos(int x, int y)
 	{
-		x += xx;
-		y += yy;
+		real_x = (float)(scr_x = x);
+		real_y = (float)(scr_y = y);
 	}
-	void SetPos(int xx, int yy)
-	{
-		x = xx;
-		y = yy;
-	}
-	void Die()
+	void die()
 	{
 		life = 0;
 	}
-	bool RangeLimit();
+	bool rangeLimit();
 	// 给定窗口的坐标和大小，判断对象是否在窗口内
-	bool isInWindow(COORD pos, COORD windows);
+	bool isInWindow(int x0, int y0, int w, int h);
+	bool isHitWindow(int x0, int y0, int w, int h);
 	bool isAlive()
 	{
 		return life > 0;
 	}
-	COORD getPos() const  {
-		COORD pos = { x, y };
-		return pos;
+	void getPos(int &x, int &y) const
+	{
+		x = scr_x;
+		y = scr_y;
 	}
-	COORD getSize() const { 
-		COORD ret = { width, height };
-		return ret;
+	void getSize(int &w, int &h) const
+	{
+		w = width;
+		h = height;
 	}
-	int getLife(void) const { return life; }
+	int getLife(void) const
+	{
+		return life;
+	}
 	void hurt(void) { life--; }
+	void hurt(int atk)
+	{
+		life -= atk;
+	}
+	void hurt(Entity &enemy)
+	{
+		life -= enemy.atk;
+	}
+	void heal(int recover)
+	{
+		life = (life + recover) % max_life;
+	}
+	const char *getImage(void)
+	{
+		return image;
+	}
 	friend void DrawObject(Entity& obj);
 };
 

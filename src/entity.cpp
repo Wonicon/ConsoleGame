@@ -1,55 +1,98 @@
 ﻿#include "entity.h"
+#include "fps.h"
 
 #pragma warning(disable : 4996)
-Entity::Entity(COORD &position, COORD &scale, char s[], int v, int _life)
+Entity::Entity(int x, int y, int w, int h, int v, int hp, int attack, char img[], int attribute[])
 {
-	x = position.X;
-	y = position.Y;
-	width = scale.X;
-	height = scale.Y;
-	speed = v;
-	life = _life;
-	strcpy(image, s);
+	real_x = (float)(scr_x = x);
+	real_y = (float)(scr_y = y);
+	width = w;
+	height = h;
+	vel = v;
+	life = hp;
+	atk = attack;
+	strcpy(image, img);
+	memcpy(attr, attribute, w * h * sizeof(int));
+	dir = STOP;
 }
-
-#pragma warning(disable : 4996)
-Entity::Entity(const Entity& obj)
-{
-	x = obj.x;
-	y = obj.y;
-	width = obj.width;
-	height = obj.height;
-	speed = obj.speed;
-	life = obj.life;
-	strcpy(image, obj.image);
-}
-bool Entity::RangeLimit(void)
+bool Entity::rangeLimit(void)
 {
 	bool flag = true;
-	if (x < 0) {
-		x = 0;
+	if (scr_x < 0) {
+		scr_x = 0;
 		flag = false;
 	}
-	else if (x > SCREEN_WIDTH - width) {
-		x = SCREEN_WIDTH - width;
+	else if (scr_x > SCREEN_WIDTH - width) {
+		scr_x = SCREEN_WIDTH - width;
 		flag = false;
 	}
-	if (y < 0) {
-		y = 0;
+	if (scr_y < 0) {
+		scr_y = 0;
 		flag = false;
 	}
-	else if (y > HEIGHT - height) {
-		y = HEIGHT - height;
+	else if (scr_y > HEIGHT - height) {
+		scr_y = HEIGHT - height;
 		flag = false;
 	}
 	return flag;
 }
-bool Entity::isInWindow(COORD pos, COORD window)
+bool Entity::isInWindow(int x0, int y0, int w, int h)
 {
-	int left = x - pos.X;
-	int right = pos.X + window.X - x - width;
-	int up = y - pos.Y;
-	int down = pos.Y + window.Y - y - height;
+	int left = scr_x - x0;
+	int right = x0 + w - scr_x - width;
+	int up = scr_y - y0;
+	int down = y0 + h - scr_y - height;
 	return left >= 0 && right >= 0 && up >= 0 && down >= 0;
+}
+bool Entity::isHitWindow(int x0, int y0, int w, int h)
+{
+	int left = scr_x - x0;
+	int right = x0 + w - scr_x - width;
+	int up = scr_y - y0;
+	int down = y0 + h - scr_y - height;
+	return left >= 0 || right >= 0 || up >= 0 || down >= 0;
+}
+bool Entity::move(int new_dir = CONS)
+{
+	if (new_dir == CONS)
+		new_dir = dir;
+
+	float distance = Fps.GetPast() * vel;
+
+	if (new_dir != dir)  // 转向或停止
+	{
+		real_x = (float)scr_x;
+		real_y = (float)scr_y;
+	}
+
+	switch (new_dir)
+	{
+	case U:  real_y -= distance; break;
+	case D:  real_y += distance; break;
+	case L:  real_x -= distance; break;
+	case R:  real_x += distance; break;
+	case UL: real_x -= distance; real_y -= distance; break;
+	case UR: real_x += distance; real_y -= distance; break;
+	case DL: real_x -= distance; real_y += distance; break;
+	case DR: real_x += distance; real_y += distance; break;
+	case STOP: real_x = (float)scr_x; real_y = (float)scr_y; break;
+	}
+
+	dir = new_dir;
+	scr_x = (int)real_x;
+	scr_y = (int)real_y;
+
+	bool flag = true;
+	if (scr_y > SCREEN_HEIGHT - height)
+		scr_y = SCREEN_HEIGHT - height, flag = false;
+	else if (scr_y < 0)
+		scr_y = 0, flag = false;
+
+	if (scr_x > SCREEN_WIDTH - width)
+		scr_x = SCREEN_WIDTH - width, flag = false;
+	else if (scr_x < 0)
+		scr_x = 0, flag = false;
+
+	return flag;
 }
 

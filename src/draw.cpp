@@ -23,9 +23,8 @@ void RepDrawColumn(int x, int y, int n, char ch)
 // 绘制单个对象
 void DrawObject(Entity& obj)
 {
-	WriteBlock(obj.x, obj.y, obj.height, obj.width, obj.image);
+	WriteBlock(obj.scr_x, obj.scr_y, obj.height, obj.width, obj.image, obj.attr);
 }
-
 
 #include <stdio.h>
 #include <Windows.h>
@@ -40,8 +39,7 @@ void DrawScreen(void) {
 	DrawString(0, 0, "hello, world");
 	RepDrawColumn(SCREEN_WIDTH, 0, HEIGHT, '|');
 
-	/* 输出文字信息 */
-	static char temp[1024];
+	///* 输出文字信息 */
 	int line = 0;
 	// Fps
 	Fps.UpdateFPS();
