@@ -22,7 +22,7 @@ Entity enemySample(
 	0, 0,
 	3, 1,
 	30,
-	100, 10, 
+	1, 10, 
 	enemyImg, enemyAttr);
 
 // ×Óµ¯
