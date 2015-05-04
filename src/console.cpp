@@ -91,7 +91,7 @@ void WriteColumn(int x, int y, CHAR str[])
 #ifndef COLOR
 void WriteBlock(int x, int y, int height, int width, CHAR str[])
 #else
-void WriteBlock(int x, int y, int height, int width, CHAR str[], int attr[])
+void WriteBlock(int x, int y, int height, int width, const char *str, const int *attr)
 #endif
 {
 	int index = x + y * WIDTH;

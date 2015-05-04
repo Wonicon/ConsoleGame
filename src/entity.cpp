@@ -1,20 +1,7 @@
 ﻿#include "entity.h"
 #include "fps.h"
 
-#pragma warning(disable : 4996)
-Entity::Entity(int x, int y, int w, int h, int v, int hp, int attack, char img[], int attribute[])
-{
-	offset = 0.0f;
-	width = w;
-	height = h;
-	vel = v;
-	life = hp;
-	atk = attack;
-	strcpy(image, img);
-	memcpy(attr, attribute, w * h * sizeof(int));
-	dir = STOP;
-}
-bool Entity::rangeLimit(void)
+bool Entity::isInScreen(void)
 {
 	bool flag = true;
 	if (scr_x < 0) {
@@ -29,8 +16,8 @@ bool Entity::rangeLimit(void)
 		scr_y = 0;
 		flag = false;
 	}
-	else if (scr_y > HEIGHT - height) {
-		scr_y = HEIGHT - height;
+	else if (scr_y > SCREEN_HEIGHT - height) {
+		scr_y = SCREEN_HEIGHT - height;
 		flag = false;
 	}
 	return flag;
@@ -113,4 +100,13 @@ bool Entity::collide(Entity &hitter)
 		}
 	}
 	return false;
+}
+
+void Entity::del(void)
+{
+	toDel = true;
+}
+bool Entity::isDel(void) const
+{
+	return toDel;
 }

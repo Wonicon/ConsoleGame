@@ -179,7 +179,7 @@ int EraseDeadEntity(deque<Entity> &ent)
 	deque<Entity>::iterator itr = ent.begin();
 	int cnt = 0;
 	while (itr != ent.end()) {
-		if (itr->isAlive()) {
+		if (!itr->isDel()) {
 			itr++;
 		}
 		else {
@@ -202,7 +202,7 @@ int Collide(Entity x, deque<Entity> &group, bool kill)
 		if (x.collide(*itr)) {
 			if (kill) {
 				count++;
-				itr->die();
+				itr->del();
 			}
 		}
 		itr++;
@@ -222,7 +222,7 @@ int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
 		if (Collide(*itr, hitters, kill) > 0) {
 			if (kill) {
 				count++;
-				itr->die();
+				itr->del();
 			}
 		}
 		itr++;

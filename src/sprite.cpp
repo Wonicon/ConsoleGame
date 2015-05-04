@@ -9,7 +9,6 @@ Entity player(
 	40, 40,
 	5, 1,
 	40,
-	1, 100, 
 	playerImg, playerAttr);
 
 // 敌机
@@ -20,7 +19,6 @@ Entity enemySample(
 	0, 0,
 	3, 1,
 	30,
-	1, 10, 
 	enemyImg, enemyAttr);
 
 // 敌机Boss
@@ -45,7 +43,6 @@ Entity bossSample(
 	(SCREEN_WIDTH - 11) / 2, 0,
 	11, 5,
 	0,
-	100, 10,
 	bossImg, bossAttr);
 
 // 子弹
@@ -56,7 +53,6 @@ Entity bulletSample(
 	0, 0,
 	1, 1,
 	70,
-	10, 100,
 	bulletImg, bulletAttr);
 
 // 子弹
@@ -66,7 +62,6 @@ Entity enemyBulletSample(
 	0, 0,
 	1, 1,
 	10,
-	30, 100,
 	enemyBulletImg, enemyBulletAttr);
 
 deque<Entity> enemies;
