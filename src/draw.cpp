@@ -44,7 +44,8 @@ void DrawScreen(void) {
 	int line = 0;
 	// Fps
 	Fps.UpdateFPS();
-	DrawString(SCREEN_WIDTH + 1, line++, "Fps %f", Fps.GetFps());
+	DrawString(SCREEN_WIDTH + 1, line++, "Fps %.1f", Fps.GetFps());
+	DrawString(SCREEN_WIDTH + 1, line++, "Past time %.1f", Fps.GetPast());
 	// Enemies
 	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.size());
 	// Bullets
@@ -58,19 +59,16 @@ void DrawScreen(void) {
 	DrawObject(player);
 
 	// 绘制子弹
-	for (deque<Entity>::iterator itr = bullets.begin();
-		itr != bullets.end(); itr++) {
-		DrawObject(*itr);
+	for (deque<Entity>::iterator itr = bullets.begin(); itr != bullets.end(); itr++) {
+		itr->draw();
 	}
-	for (deque<Entity>::iterator itr = enemyBullets.begin();
-		itr != enemyBullets.end(); itr++) {
-		DrawObject(*itr);
+	for (deque<Entity>::iterator itr = enemyBullets.begin(); itr != enemyBullets.end(); itr++) {
+		itr->draw();
 	}
 	
 	// 绘制敌人
-	for (deque<Entity>::iterator itr = enemies.begin();
-		itr != enemies.end(); itr++) {
-		DrawObject(*itr);
+	for (deque<Entity>::iterator itr = enemies.begin(); itr != enemies.end(); itr++) {
+		itr->draw();
 	}
 }
 

@@ -19,12 +19,12 @@
 
 class Entity {
 private:
-	float real_x, real_y;
 	int scr_x, scr_y;
 	int width, height;
 	int life;
 	int max_life;
 	int atk;
+	float offset;
 #define BUFFER_MAX (128)
 	char image[BUFFER_MAX];
 	int attr[BUFFER_MAX];
@@ -36,8 +36,8 @@ public:
 	bool move(int new_dir = CONS);
 	void setPos(int x, int y)
 	{
-		real_x = (float)(scr_x = x);
-		real_y = (float)(scr_y = y);
+		scr_x = x;
+		scr_y = y;
 	}
 	void die()
 	{
@@ -88,12 +88,15 @@ public:
 	}
 	bool isInImage(int x, int y) const
 	{
+
 		bool a1 = scr_x <= x;
 		bool a2 = x < scr_x + width;
 		bool a3 = scr_y <= y;
 		bool a4 = y < scr_y + height;
 		return a1 && a2 && a3 && a4 && getChar(x, y) != JMP_CHAR;
 	}
+	virtual void draw();
+	bool collide(Entity &obj);
 	friend void DrawObject(Entity& obj);
 	friend bool Collide(Entity &, Entity &);
 };

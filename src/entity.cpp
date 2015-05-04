@@ -4,8 +4,7 @@
 #pragma warning(disable : 4996)
 Entity::Entity(int x, int y, int w, int h, int v, int hp, int attack, char img[], int attribute[])
 {
-	real_x = (float)(scr_x = x);
-	real_y = (float)(scr_y = y);
+	offset = 0.0f;
 	width = w;
 	height = h;
 	vel = v;
@@ -52,37 +51,32 @@ bool Entity::isHitWindow(int x0, int y0, int w, int h)
 	int down = y0 + h - scr_y - height;
 	return left >= 0 || right >= 0 || up >= 0 || down >= 0;
 }
-bool Entity::move(int new_dir)
+
+#include <math.h>
+bool Entity::move(int newDir)
 {
-	if (new_dir == CONS)
-		new_dir = dir;
-	else if (new_dir == STOP)
+	if (newDir == CONS)
+		newDir = dir;
+	else if (newDir == STOP)
 		return true;
 
-	float distance = Fps.GetPast() * vel;
-
-	if (new_dir != dir)  // 转向或停止
-	{
-		real_x = (float)scr_x;
-		real_y = (float)scr_y;
+	offset += Fps.GetPast() * vel;
+	if (offset > 1.0f) {
+		float floorOffset = floor(offset);
+		switch (newDir) {
+		case U:  scr_y -= floorOffset; break;
+		case D:  scr_y += floorOffset; break;
+		case L:  scr_x -= floorOffset; break;
+		case R:  scr_x += floorOffset; break;
+		case UL: scr_x -= floorOffset; scr_y -= floorOffset; break;
+		case UR: scr_x += floorOffset; scr_y -= floorOffset; break;
+		case DL: scr_x -= floorOffset; scr_y += floorOffset; break;
+		case DR: scr_x += floorOffset; scr_y += floorOffset; break;
+		}
+		offset = 0.0f;
 	}
 
-	switch (new_dir)
-	{
-	case U:  real_y -= distance; break;
-	case D:  real_y += distance; break;
-	case L:  real_x -= distance; break;
-	case R:  real_x += distance; break;
-	case UL: real_x -= distance; real_y -= distance; break;
-	case UR: real_x += distance; real_y -= distance; break;
-	case DL: real_x -= distance; real_y += distance; break;
-	case DR: real_x += distance; real_y += distance; break;
-	case STOP: real_x = (float)scr_x; real_y = (float)scr_y; break;
-	}
-
-	dir = new_dir;
-	scr_x = (int)real_x;
-	scr_y = (int)real_y;
+	dir = newDir;
 
 	bool flag = true;
 	if (scr_y > SCREEN_HEIGHT - height)
@@ -98,3 +92,25 @@ bool Entity::move(int new_dir)
 	return flag;
 }
 
+void Entity::draw()
+{
+	WriteBlock(scr_x, scr_y, height, width, image, attr);
+}
+
+/*******************************************
+isCollide 检查 obj 是否碰撞到 hitter
+*******************************************/
+bool Entity::collide(Entity &hitter)
+{
+	for (int i = scr_x; i < scr_x + width; i++) {
+		for (int j = scr_y; j < scr_y + height; j++) {
+			if (image[i + j * width] == JMP_CHAR) {
+				continue;
+			}
+			if (hitter.isInImage(i, j)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}

@@ -22,13 +22,5 @@ int IsKeyPressed(KEYCODE keycode);
 void FireBullet();
 // 随机产生一个敌机，在游戏区域内
 void CreateEnemy();
-// 判断指定的对象是否与被 label 标识的对象产生碰撞
-bool isHitten(const Entity& obj, int label);
-// 初始化点阵状态
-void InitState();
-
-void WriteState(Entity &obj, int label);
-
 void Movement();
-
 void Beam();

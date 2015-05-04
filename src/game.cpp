@@ -15,7 +15,6 @@ int GameMainLoop()
 {
 	count = 0;
 	hitten = 0;
-	InitState();
 	player.setPos(SCREEN_WIDTH / 2, HEIGHT / 2);
 	enemies.clear();
 	bullets.clear();
@@ -24,14 +23,10 @@ int GameMainLoop()
 	while (PlayerState == ALIVE) {
 		if (1 || IsWindowActive()) {  // 在窗口激活时进行以下动态时间
 			ClearConsoleBuffer();  // 清空缓冲区
-			InitState();
-
 			CreateEnemy();
 			FireBullet();
 			Beam();
-
 			Movement();
-
 			DrawScreen();
 			RedrawConsole();
 		}
