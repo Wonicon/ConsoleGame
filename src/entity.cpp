@@ -98,7 +98,7 @@ void Entity::draw()
 }
 
 /*******************************************
-isCollide 检查 obj 是否碰撞到 hitter
+   isCollide 检查 obj 是否碰撞到 hitter
 *******************************************/
 bool Entity::collide(Entity &hitter)
 {

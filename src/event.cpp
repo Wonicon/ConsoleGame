@@ -1,7 +1,7 @@
-﻿#include "event.h"
+﻿#include <stdlib.h>
+#include "event.h"
 #include "sprite.h"
 #include "console.h"
-#include <stdlib.h>
 #include "entity.h"
 #include "game.h"
 
@@ -74,7 +74,6 @@ void Beam()
 	}
 }
 
-deque<Entity> bossBullets;
 void Boss()
 {
 	static Entity boss(bossSample);
@@ -175,50 +174,40 @@ void CreateEnemy() {
 		enemies.push_back(enemySample);
 	}
 }
-int EraseDeadEnemies()
+int EraseDeadEntity(deque<Entity> &ent)
 {
-	deque<Entity>::iterator itr = enemies.begin();
+	deque<Entity>::iterator itr = ent.begin();
 	int cnt = 0;
-	while (itr != enemies.end()) {
+	while (itr != ent.end()) {
 		if (itr->isAlive()) {
 			itr++;
 		}
 		else {
 			cnt++;
-			itr = enemies.erase(itr);
+			itr = ent.erase(itr);
 		}
 	}
 	return cnt;
 }
 
-void CollisionDetection();
-void Movement()
+/****************************************
+  isCollide 检查 实体x 是否与一组实体碰撞。
+  并根据参数判断是否删除组内实体
+ ****************************************/
+int Collide(Entity x, deque<Entity> &group, bool kill)
 {
-	if (hitten > 5)
-		Boss();
-	MoveBullets();
-	EnemyMove();
-	PlayerMovement();
-	CollisionDetection();
-}
-
-
-/*******************************************
-isCollide 检查 obj 是否碰撞到 hitter
-*******************************************/
-bool Collide(Entity &obj, Entity &hitter)
-{
-	for (int i = obj.scr_x; i < obj.scr_x + obj.width; i++) {
-		for (int j = obj.scr_y; j < obj.scr_y + obj.height; j++) {
-			if (obj.getChar(i, j) == JMP_CHAR) {
-				continue;
-			}
-			if (hitter.isInImage(i, j)) {
-				return true;
+	auto itr = group.begin();
+	int count = 0;
+	while (itr != group.end()) {
+		if (x.collide(*itr)) {
+			if (kill) {
+				count++;
+				itr->die();
 			}
 		}
+		itr++;
 	}
-	return false;
+	return count;
 }
 
 /****************************************
@@ -230,18 +219,13 @@ int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
 	auto itr = objs.begin();
 	int count = 0;
 	while (itr != objs.end()) {
-		if (Collide(*itr, hitters, kill)) {
+		if (Collide(*itr, hitters, kill) > 0) {
 			if (kill) {
 				count++;
-				itr = objs.erase(itr);
-			}
-			else {
-				itr++;
+				itr->die();
 			}
 		}
-		else {
-			itr++;
-		}
+		itr++;
 	}
 	return count;
 }
@@ -249,5 +233,16 @@ int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
 void CollisionDetection()
 {
 	Collide(enemies, bullets, true);
+}
 
+void Movement()
+{
+	if (hitten > 5)
+		Boss();
+	MoveBullets();
+	EnemyMove();
+	PlayerMovement();
+	CollisionDetection();
+	EraseDeadEntity(enemies);
+	EraseDeadEntity(bullets);
 }
