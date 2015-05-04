@@ -4,6 +4,9 @@
 #include "entity.h"
 #include "console.h"
 #include <stdio.h>
+#include "weapon.h"
+extern Bullets bullets;
+extern Bullets enemyBullets;
 // 绘制字符串
 char _drawstring_buffer[1024];
 // 竖向绘制字符串
@@ -49,22 +52,16 @@ void DrawScreen(void) {
 	// Enemies
 	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.size());
 	// Bullets
-	DrawString(SCREEN_WIDTH + 1, line++, "Bullets %d", bullets.size());
 	// Hitten
 	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", hitten);
 	DrawString(SCREEN_WIDTH + 1, line++, "P %.0f", beampower);
-	/* 移动物体 */
 
 	// 绘制自机
-	DrawObject(player);
+	player.draw();
 
 	// 绘制子弹
-	for (deque<Entity>::iterator itr = bullets.begin(); itr != bullets.end(); itr++) {
-		itr->draw();
-	}
-	for (deque<Entity>::iterator itr = enemyBullets.begin(); itr != enemyBullets.end(); itr++) {
-		itr->draw();
-	}
+	bullets.draw();
+	enemyBullets.draw();
 	
 	// 绘制敌人
 	for (deque<Entity>::iterator itr = enemies.begin(); itr != enemies.end(); itr++) {

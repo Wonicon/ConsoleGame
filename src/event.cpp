@@ -4,54 +4,13 @@
 #include "console.h"
 #include "entity.h"
 #include "game.h"
+#include "weapon.h"
+extern Bullets bullets;
+extern Bullets enemyBullets;
 
 int hitten = 0;
 static float MaxPow = 100.0f;
 float beampower = MaxPow;
-
-void MoveBullets()
-{
-	deque<Entity>::iterator itr = bullets.begin();
-	while (itr != bullets.end()) {
-		if (itr->move()) itr++;
-		else itr = bullets.erase(itr);
-	}
-	itr = enemyBullets.begin();
-	while (itr != enemyBullets.end()) {
-		if (itr->move()) itr++;
-		else itr = enemyBullets.erase(itr);
-	}
-}
-
-void FireBullet()
-{
-	static float N = 8.0f;
-	static float n = 0.0f;
-	n += N * Fps.GetPast();
-	
-	if (n > 1.0f) {
-		if (IsKeyPressed(0x5a)) {
-			int x, y, w, h;
-			player.getPos(x, y);
-			player.getSize(w, h);
-			bulletSample.setPos(x + w / 2, y);
-			bulletSample.dir = U;
-			bullets.push_back(bulletSample);
-			n = 0.0f;
-		}
-		else if (IsKeyPressed(0x58)) {
-			int x, y, w, h;
-			player.getPos(x, y);
-			player.getSize(w, h);
-			bulletSample.setPos(x + (w - 1) / 2, y);
-			bulletSample.dir = UR;
-			bullets.push_back(bulletSample);
-			bulletSample.dir = UL;
-			bullets.push_back(bulletSample);
-			n = 0.0f;
-		}
-	}
-}
 
 void Beam()
 {
@@ -74,24 +33,6 @@ void Beam()
 	}
 }
 
-void Boss()
-{
-	static Entity boss(bossSample);
-	DrawObject(boss);
-	int x, y, w, h;
-	boss.getPos(x, y);
-	boss.getSize(w, h);
-
-	enemyBulletSample.dir = DR;
-	enemyBulletSample.setPos(x + 1, y + h);
-	enemyBullets.push_back(enemyBulletSample);
-	enemyBulletSample.dir = DL;
-	enemyBulletSample.setPos(x + w - 1, y + h);
-	enemyBullets.push_back(enemyBulletSample);
-	enemyBulletSample.dir = D;
-	enemyBulletSample.setPos(x + w / 2, y + h);
-	enemyBullets.push_back(enemyBulletSample);
-}
 void PlayerMovement()
 {
 	int dir = 0;
@@ -117,6 +58,7 @@ void EnemyMove()
 	deque<Entity>::iterator itr = enemies.begin();
 	while (itr != enemies.end()) {
 		n += N * Fps.GetPast();
+		enemyBullets.fire(itr->mid(), itr->down(), D, 0);
 		UINT32 sw = rand() % 100;
 		if (sw < 2)
 		{
@@ -145,7 +87,7 @@ void EnemyMove()
 				else
 					enemyBulletSample.dir = D;
 
-				enemyBullets.push_back(enemyBulletSample);
+				enemyBullets.fire(itr->mid(), itr->down(), D, 0);
 				n = 0.0f;
 			}
 		}
@@ -232,17 +174,20 @@ int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
 
 void CollisionDetection()
 {
-	Collide(enemies, bullets, true);
+	hitten += Collide(enemies, bullets.getEntry(), true);
 }
 
 void Movement()
 {
-	if (hitten > 5)
-		Boss();
-	MoveBullets();
-	EnemyMove();
-	PlayerMovement();
 	CollisionDetection();
 	EraseDeadEntity(enemies);
-	EraseDeadEntity(bullets);
+	EnemyMove();
+	CollisionDetection();
+	EraseDeadEntity(enemies);
+	bullets.fire(player.mid(), player.up(), U, 0x5a);
+	CollisionDetection();
+	EraseDeadEntity(enemies);
+	PlayerMovement();
+	EraseDeadEntity(enemies);
+	enemyBullets.update();
 }

@@ -1,6 +1,6 @@
 ﻿#include "entity.h"
 #include "fps.h"
-
+#include <stdio.h>
 bool Entity::isInScreen(void)
 {
 	bool flag = true;

@@ -18,7 +18,7 @@ int enemyAttr[] = { FWHITE, FWHITE, FWHITE };
 Entity enemySample(
 	0, 0,
 	3, 1,
-	30,
+	10,
 	enemyImg, enemyAttr);
 
 // µÐ»úBoss
@@ -52,7 +52,7 @@ int bulletAttr[] = { FWHITE };
 Entity bulletSample(
 	0, 0,
 	1, 1,
-	70,
+	50,
 	bulletImg, bulletAttr);
 
 // ×Óµ¯
@@ -66,5 +66,4 @@ Entity enemyBulletSample(
 
 deque<Entity> enemies;
 deque<Entity> bullets;
-deque<Entity> enemyBullets;
 deque<Entity> beam;
