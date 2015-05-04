@@ -107,7 +107,7 @@ void FireBullet()
 			int x, y, w, h;
 			player.getPos(x, y);
 			player.getSize(w, h);
-			bulletSample.setPos(x + (w - 1) / 2, y);
+			bulletSample.setPos(x + w / 2, y);
 			bulletSample.dir = U;
 			bullets.push_back(bulletSample);
 			n = 0.0f;
@@ -249,7 +249,7 @@ void CreateEnemy() {
 		return;
 	if (a == 5) {
 		int x = rand() % (SCREEN_WIDTH - 3);
-		int y = 0;
+		int y = 2;
 		enemySample.setPos(x, y);
 		enemies.push_back(enemySample);
 	}
@@ -278,20 +278,110 @@ void CommonEvents()
 	EraseDeadEnemies();
 	RefreshEnemyState();
 }
+
+void CollisionDetection();
 void Movement()
 {
-	if (hitten > 5)
-		Boss();
-	WriteState(player, PLAYER_JUDGE);
+	//if (hitten > 5)
+	//	Boss();
+	//WriteState(player, PLAYER_JUDGE);
 	MoveBullets();
 	EnemyMove();
-	DetectCollision();
-	RefreshEnemyState();
-	if (isHitten(player, ENEMY_BULLET | ENEMY_JUDGE))
-	{
-		PlayerState = DEAD;
-	}
-	EraseDeadEnemies();
+	//DetectCollision();
+	//RefreshEnemyState();
+	//if (isHitten(player, ENEMY_BULLET | ENEMY_JUDGE))
+	//{
+	//	PlayerState = DEAD;
+	//}
+	//EraseDeadEnemies();
 	PlayerMovement();
+	CollisionDetection();
 }
 
+
+/*******************************************
+isCollide 检查 obj 是否碰撞到 hitter
+*******************************************/
+bool Collide(Entity &obj, Entity &hitter)
+{
+	for (int i = obj.scr_x; i < obj.scr_x + obj.width; i++)
+	{
+		for (int j = obj.scr_y; j < obj.scr_y + obj.height; j++)
+		{
+			if (obj.getChar(i, j) == JMP_CHAR)
+			{
+				continue;
+			}
+			if (hitter.isInImage(i, j))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/****************************************
+  isCollide 检查 实体x 是否与一组实体碰撞。
+  并根据参数判断是否删除组内实体
+ ****************************************/
+bool Collide(Entity x, deque<Entity> &group, bool kill)
+{
+	auto itr = group.begin();
+	bool collide_flag = false;
+	while (itr != group.end())
+	{
+		if (Collide(x, *itr))
+		{
+			collide_flag = true;
+			if (kill)
+			{
+				itr = group.erase(itr);
+			}
+			else
+			{
+				itr++;
+			}
+		}
+		else
+		{
+			itr++;
+		}
+	}
+	return collide_flag;
+}
+
+/****************************************
+  isCollide 检查一组实体是否与另一组实体碰撞。
+  并根据参数判断是否删除组内实体
+****************************************/
+int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
+{
+	auto itr = objs.begin();
+	int count = 0;
+	while (itr != objs.end())
+	{
+		if (Collide(*itr, hitters, kill))
+		{
+			if (kill)
+			{
+				count++;
+				itr = objs.erase(itr);
+			}
+			else
+			{
+				itr++;
+			}
+		}
+		else
+		{
+			itr++;
+		}
+	}
+	return count;
+}
+
+void CollisionDetection()
+{
+	Collide(enemies, bullets, true);
+}

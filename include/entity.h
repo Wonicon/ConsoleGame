@@ -82,6 +82,19 @@ public:
 	{
 		return image;
 	}
+	char getChar(int x, int y) const
+	{
+		return image[x + y * width];
+	}
+	bool isInImage(int x, int y) const
+	{
+		bool a1 = scr_x <= x;
+		bool a2 = x < scr_x + width;
+		bool a3 = scr_y <= y;
+		bool a4 = y < scr_y + height;
+		return a1 && a2 && a3 && a4 && getChar(x, y) != JMP_CHAR;
+	}
 	friend void DrawObject(Entity& obj);
+	friend bool Collide(Entity &, Entity &);
 };
 

@@ -55,7 +55,7 @@ int bulletAttr[] = { FWHITE };
 Entity bulletSample(
 	0, 0,
 	1, 1,
-	60,
+	70,
 	10, 100,
 	bulletImg, bulletAttr);
 
