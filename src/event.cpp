@@ -200,7 +200,7 @@ void EnemyMove()
 		UINT32 sw = rand() % 100;
 		if (sw < 2)
 		{
-			if (n > 1.0f) {
+			if (n > 5.0f) {
 				int x, y, w, h;
 				itr->getPos(x, y);
 				itr->getSize(w, h);
@@ -294,3 +294,4 @@ void Movement()
 	EraseDeadEnemies();
 	PlayerMovement();
 }
+
