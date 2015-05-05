@@ -23,9 +23,9 @@ private:
 	char BeamCharBuffer[SCREEN_HEIGHT];
 	int BeamAttrBuffer[SCREEN_HEIGHT];
 public:
-	Beam(int attr, int attack, int power);
-	void fire(int x, int y, int dir); // 形成射线判定，同时消耗能量
-	void draw();                      // 画射线，最好在fire之后调用
+	Beam(int attr, int attack, float power);
+	void fire(int x, int y, int dir, bool en = true); // 形成射线判定，同时消耗能量
+	void draw(bool en = true);                      // 画射线，最好在fire之后调用
 	void charge(float n);             // 充能
 	float getPower() const;           // 获得能量
 	int getAtk() const;               // 获得攻击力
@@ -41,14 +41,19 @@ private:
 	Entity &sample;
 	float freq;
 	float acc;
+	int count;
 public:
 	Bullets(int attack, float frequence, Entity &sample)
-		:atk(attack), sample(sample), freq(frequence), acc(0.0f){}
-	void fire(int x, int y, int dir)
+		:atk(attack), sample(sample), freq(frequence), acc(0.0f), count(10000){}
+	void fire(int x, int y, int dir, bool en = false)
 	{
-		sample.setPos(x, y);
-		sample.dir = dir;
-		entries.push_back(sample);
+		// en 是为了允许敌人无限子弹的
+		if (en || count > 0) {
+			sample.setPos(x, y);
+			sample.dir = dir;
+			entries.push_back(sample);
+			if (!en) count--;
+		}
 	}
 	void move()
 	{
@@ -87,6 +92,14 @@ public:
 	void clear(void)
 	{
 		entries.clear();
+	}
+	int getCount(void) const
+	{
+		return count;
+	}
+	int add(int n)
+	{
+		count += n;
 	}
 };
 

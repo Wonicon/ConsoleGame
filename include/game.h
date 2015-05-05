@@ -4,6 +4,4 @@
 // 游戏主循环，返回值指示退出状态
 int GameMainLoop();
 // TODO 游戏菜单
-int ShowStartMenu();
-
-extern int PlayerState;
+void Welcome();

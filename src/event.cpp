@@ -3,25 +3,9 @@
 #include "sprite.h"
 #include "console.h"
 #include "entity.h"
-#include "game.h"
 #include "weapon.h"
-#include "draw.h"
-#include "game-state.h"
-#include "fps.h"
-
-// BeamUpdate 描述玩家的激光具体行为
-void BeamUpdate()
-{
-	if (state.beam && beam.getPower() > 1.0f) {
-		if (beam.getPower() > 2.0f) {
-			beam.fire(player.mid(), player.up(), U);
-			beam.draw();
-		}
-	}
-	else {
-		beam.charge(1.0f * GetPast());
-	}
-}
+#include "game-state.h"    // state
+#include "fps.h"           // GetPast()
 
 // PlayerMovement 玩家移动事件
 //  1. move方法自带时间控制
@@ -47,6 +31,7 @@ void CreateEnemy() {
 		enemies.push_back(enemySample);
 	}
 }
+
 int EraseDeadEntity(deque<Entity> &ent)
 {
 	deque<Entity>::iterator itr = ent.begin();
@@ -112,7 +97,7 @@ void Movement()
 	EraseDeadEntity(enemies);
 	Shooter(bullets, player, U);
 	bullets.update();
-	BeamUpdate();
+	beam.fire(player.mid(), player.up(), U, state.beam);
 	CollisionDetection();
 	EraseDeadEntity(enemies);
 	PlayerMovement();

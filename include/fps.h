@@ -11,3 +11,5 @@ float GetPast(void);
 
 // 重要，频率控制的关键
 bool FreqLock(float &current, float freq, bool clear);
+
+void InitFps(void);

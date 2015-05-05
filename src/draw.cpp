@@ -47,13 +47,12 @@ void DrawScreen(void) {
 	// Fps
 	UpdateFps();
 	DrawString(SCREEN_WIDTH + 1, line++, "Fps %f", GetFps());
-	DrawString(SCREEN_WIDTH + 1, line++, "Past time %f", GetPast());
 	// Enemies
 	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.size());
 	// Bullets
-	// Hitten
 	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", state.hitCount);
 	DrawString(SCREEN_WIDTH + 1, line++, "P %.0f", beam.getPower());
+	DrawString(SCREEN_WIDTH + 1, line++, "B %d", bullets.getCount());
 
 	// 绘制自机
 	player.draw();
@@ -66,5 +65,7 @@ void DrawScreen(void) {
 	for (deque<Entity>::iterator itr = enemies.begin(); itr != enemies.end(); itr++) {
 		itr->draw();
 	}
+
+	beam.draw(state.beam);
 }
 

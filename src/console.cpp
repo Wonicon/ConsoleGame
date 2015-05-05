@@ -1,6 +1,7 @@
 ﻿#include "console.h"
 #include <Windows.h>
 #include <assert.h>
+#include "sprite.h"
 
 const SMALL_RECT windowSize = { 0, 0, WIDTH - 1, HEIGHT - 1 };
 const COORD bufferSize = { WIDTH, HEIGHT };
@@ -14,7 +15,7 @@ static HWND   hWin;                    // 窗口句柄
 static CHAR   screen[HEIGHT * WIDTH];  // 屏幕字符缓冲区
 #else
 static CHAR_INFO screen[HEIGHT * WIDTH];
-#define DEFAULT_STR_ATTR (FOREGROUND_GREEN)
+#define DEFAULT_STR_ATTR (FGREEN | FRED | FBLUE)
 static int string_attr = DEFAULT_STR_ATTR;
 #endif
 
