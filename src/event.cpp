@@ -86,7 +86,8 @@ int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
 // 所有碰撞检测行为都在这里处理
 void CollisionDetection()
 {
-	state.hitCount += Collide(enemies, bullets.getEntry(), true);
+	for (auto itr = enemies.begin(); itr != enemies.end(); itr++)
+		state.hitCount += bullets.collide(*itr);
 	state.hitCount += Collide(beam.getJudge(), enemies, true);
 }
 
@@ -103,7 +104,7 @@ void Movement()
 	PlayerMovement();
 	if (Collide(player, enemies, true) > 0)
 		state.playerState = DEAD;
-	if (Collide(player, enemyBullets.getEntry(), true) > 0)
+	if (enemyBullets.collide(player))
 		state.playerState = DEAD;
 	enemyBullets.update();
 }

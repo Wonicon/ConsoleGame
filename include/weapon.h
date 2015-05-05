@@ -36,7 +36,10 @@ public:
 class Bullets
 {
 private:
-	deque<Entity> entries;
+#define LEN 128
+	//deque<Entity> entries;
+	PEntity entries[LEN];
+	int size;
 	int  atk;
 	Entity &sample;
 	float freq;
@@ -44,46 +47,71 @@ private:
 	int count;
 public:
 	Bullets(int attack, float frequence, Entity &sample)
-		:atk(attack), sample(sample), freq(frequence), acc(0.0f), count(10000){}
+		:atk(attack), sample(sample), freq(frequence), acc(0.0f), count(10000)
+	{
+		for (int i = 0; i < LEN; i++) {
+			entries[i] = NULL;
+		}
+		size = 0;
+	}
+	bool addNewEntity(Entity& x)
+	{
+		if (size == LEN)
+			return false;
+
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] == NULL) {
+				entries[i] = new Entity(x);
+				size++;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	void deleteEntity(int i)
+	{
+		delete entries[i];
+		entries[i] = NULL;
+		size--;
+	}
 	void fire(int x, int y, int dir, bool en = false)
 	{
 		// en 是为了允许敌人无限子弹的
 		if (en || count > 0) {
 			sample.setPos(x, y);
 			sample.dir = dir;
-			entries.push_back(sample);
+			addNewEntity(sample);
 			if (!en) count--;
 		}
 	}
 	void move()
 	{
-		deque<Entity>::iterator itr = entries.begin();
-		while (itr != entries.end()) {
-			if (itr->move()) itr++;
-			else itr = entries.erase(itr);
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL && !entries[i]->move()) {
+				deleteEntity(i);
+			}
 		}
 	}
 	void erase()
 	{
-		deque<Entity>::iterator itr = entries.begin();
-		while (itr != entries.end()) {
-			if (!itr->isDel()) itr++;
-			else itr = entries.erase(itr);
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL && entries[i]->isDel()) {
+				deleteEntity(i);
+			}
 		}
 	}
 	void draw()
 	{
-		for (deque<Entity>::iterator itr = entries.begin(); itr != entries.end(); itr++) {
-			itr->draw();
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL) {
+				entries[i]->draw();
+			}
 		}
 	}
 	void update() {
 		erase();
 		move();
-	}
-	deque<Entity>& Bullets::getEntry()
-	{
-		return entries;
 	}
 	bool enable(bool clear)
 	{
@@ -91,7 +119,12 @@ public:
 	}
 	void clear(void)
 	{
-		entries.clear();
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL) {
+				deleteEntity(i);
+			}
+		}
+		size = 0;
 	}
 	int getCount(void) const
 	{
@@ -100,6 +133,17 @@ public:
 	int add(int n)
 	{
 		count += n;
+	}
+	int collide(Entity& obj)
+	{
+		int hitCount = 0;
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL && obj.collide(*entries[i])) {
+				obj.del();
+				hitCount++;
+			}
+		}
+		return hitCount;
 	}
 };
 

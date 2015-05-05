@@ -105,3 +105,4 @@ public:
 	friend class Beam;
 };
 
+typedef Entity *PEntity;
