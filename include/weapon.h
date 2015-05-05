@@ -2,8 +2,6 @@
 
 #include "entity.h"
 #include "fps.h"
-#include <deque>
-using std::deque;
 
 // 这些武器类的行为需要频率控制，原来的代码到处可见如下这种重复的频率控制结构
 // n += Freq * Fps.getPast();
@@ -25,7 +23,7 @@ private:
 public:
 	Beam(int attr, int attack, float power);
 	void fire(int x, int y, int dir, bool en = true); // 形成射线判定，同时消耗能量
-	void draw(bool en = true);                      // 画射线，最好在fire之后调用
+	void draw(bool en = true);                        // 画射线，最好在fire之后调用
 	void charge(float n);             // 充能
 	float getPower() const;           // 获得能量
 	int getAtk() const;               // 获得攻击力
@@ -33,79 +31,9 @@ public:
 
 };
 
-class Bullets
-{
-private:
-	deque<Entity> entries;
-	int  atk;
-	Entity &sample;
-	float freq;
-	float acc;
-	int count;
-public:
-	Bullets(int attack, float frequence, Entity &sample)
-		:atk(attack), sample(sample), freq(frequence), acc(0.0f), count(10000){}
-	void fire(int x, int y, int dir, bool en = false)
-	{
-		// en 是为了允许敌人无限子弹的
-		if (en || count > 0) {
-			sample.setPos(x, y);
-			sample.dir = dir;
-			entries.push_back(sample);
-			if (!en) count--;
-		}
-	}
-	void move()
-	{
-		deque<Entity>::iterator itr = entries.begin();
-		while (itr != entries.end()) {
-			if (itr->move()) itr++;
-			else itr = entries.erase(itr);
-		}
-	}
-	void erase()
-	{
-		deque<Entity>::iterator itr = entries.begin();
-		while (itr != entries.end()) {
-			if (!itr->isDel()) itr++;
-			else itr = entries.erase(itr);
-		}
-	}
-	void draw()
-	{
-		for (deque<Entity>::iterator itr = entries.begin(); itr != entries.end(); itr++) {
-			itr->draw();
-		}
-	}
-	void update() {
-		erase();
-		move();
-	}
-	deque<Entity>& Bullets::getEntry()
-	{
-		return entries;
-	}
-	bool enable(bool clear)
-	{
-		return FreqLock(acc, freq, clear);
-	}
-	void clear(void)
-	{
-		entries.clear();
-	}
-	int getCount(void) const
-	{
-		return count;
-	}
-	int add(int n)
-	{
-		count += n;
-	}
-};
+class Bullets;
 
 void Shooter(Bullets& blt, Entity& obj, int dir);
-
-
 extern Bullets bullets;
 extern Bullets enemyBullets;
 extern Beam beam;

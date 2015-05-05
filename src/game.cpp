@@ -7,6 +7,11 @@
 #include "draw.h"
 #include "weapon.h"
 #include "game-state.h"
+#include "enemy.h"
+#include "component.h"
+
+void CollisionDetection(void);
+void PlayerMovement(void);
 
 void Welcome(void)
 {
@@ -92,8 +97,27 @@ int GameMainLoop()
 			// TODO Movement里包含了太多的功能
 			ClearConsoleBuffer();
 			UpdateState();
-			CreateEnemy();
-			Movement();
+			
+			// 敌机回合
+			EnemyMovement();
+			// 敌机的攻击
+			EnemyFire();
+			enemyBullets.update();
+			// 碰撞检测
+			CollisionDetection();
+			EnemyClear();
+
+			// 玩家回合
+			PlayerMovement();
+			// 玩家的攻击
+			Shooter(bullets, player, U);
+			bullets.update();
+			beam.fire(player.mid(), player.up(), U, state.beam);
+			// 碰撞检测
+			CollisionDetection();
+			EnemyClear();
+
+			UpdateFps();
 			DrawScreen();
 			RedrawConsole();
 		}
