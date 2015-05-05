@@ -7,7 +7,9 @@
 #include "draw.h"
 #include "weapon.h"
 #include "game-state.h"
+#include "enemy.h"
 
+extern void Events();
 void Welcome(void)
 {
 	InitFps();
@@ -78,6 +80,7 @@ void Welcome(void)
 	}
 }
 
+extern Enemies enemies;
 int GameMainLoop()
 {
 	InitGameState();
@@ -92,8 +95,8 @@ int GameMainLoop()
 			// TODO Movement里包含了太多的功能
 			ClearConsoleBuffer();
 			UpdateState();
-			CreateEnemy();
-			Movement();
+			enemies.add();
+			Events();
 			DrawScreen();
 			RedrawConsole();
 		}

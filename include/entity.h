@@ -110,10 +110,14 @@ typedef Entity *PEntity;
 
 class EntitySet
 {
-private:
+protected:
 #define LEN 128
 	PEntity entries[LEN];
 	int size;
+private:
+	int index;
+	int prev;
+	int prev_index;
 	bool deleteEntity(int i)
 	{
 		if (entries[i] == NULL)
@@ -124,7 +128,7 @@ private:
 		return true;
 	}
 public:
-	EntitySet(void) : size(0)
+	EntitySet(void) : size(0), index(0), prev(0), prev_index(0)
 	{
 		for (int i = 0; i < LEN; i++) {
 			entries[i] = NULL;
@@ -145,7 +149,7 @@ public:
 
 		return false;
 	}
-	void draw(void)
+	void draw(void) const
 	{
 		for (int i = 0; i < LEN; i++) {
 			if (entries[i] != NULL) {
@@ -184,6 +188,7 @@ public:
 		for (int i = 0; i < LEN; i++) {
 			if (entries[i] != NULL && obj.collide(*entries[i])) {
 				obj.del();
+				entries[i]->del();
 				hitCount++;
 			}
 		}
@@ -197,5 +202,31 @@ public:
 				count += collide(*(s.entries[i]));
 			}
 		}
+		return count;
+	}
+	int getSize(void) const
+	{
+		return size;
+	}
+	PEntity getEntity(int i)
+	{
+		if (i >= size) 
+			return NULL;
+		if (prev == i)
+			return entries[prev_index];
+		else if (prev > i) {
+			prev = i;
+			prev_index = 0;
+		}
+		for (int j = prev_index; j < LEN; j++) {
+			if (entries[j] != NULL) {
+				i--;
+				if (i < 0) {
+					prev_index = j;
+					return entries[prev_index];
+				}
+			}
+		}
+		return NULL;
 	}
 };

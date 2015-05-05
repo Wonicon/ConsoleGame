@@ -12,13 +12,13 @@ Entity player(
 	playerImg, playerAttr);
 
 // 敌机
-char enemyImg[] = "'_'";
+char enemyImg[] = ">_<";
 int enemyAttr[] = { FWHITE, FWHITE, FWHITE };
 // 常备一个样本对象，加入容器时似乎避免不了拷贝构造，这样似乎可以把参数的构造析构节省掉？
 Entity enemySample(
 	0, 0,
 	3, 1,
-	10,
+	5,
 	enemyImg, enemyAttr);
 
 // 敌机Boss
@@ -52,7 +52,7 @@ int bulletAttr[] = { FWHITE };
 Entity bulletSample(
 	0, 0,
 	1, 1,
-	70,
+	60,
 	bulletImg, bulletAttr);
 
 // 子弹
@@ -61,9 +61,7 @@ int enemyBulletAttr[] = { FWHITE };
 Entity enemyBulletSample(
 	0, 0,
 	1, 1,
-	4,
+	15,
 	enemyBulletImg, enemyBulletAttr);
 
-deque<Entity> enemies;
-deque<Entity> bullets;
-deque<Entity> beam;
+//deque<Entity> enemies;

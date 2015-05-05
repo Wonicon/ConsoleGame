@@ -1,11 +1,12 @@
 ﻿#include <assert.h>
-#include <deque>
 #include "draw.h"
 #include "entity.h"
 #include "console.h"
 #include <stdio.h>
 #include "weapon.h"
 #include "game-state.h"
+#include "enemy.h"
+extern Enemies enemies;
 extern Bullets bullets;
 extern Bullets enemyBullets;
 // 绘制字符串
@@ -48,7 +49,7 @@ void DrawScreen(void) {
 	UpdateFps();
 	DrawString(SCREEN_WIDTH + 1, line++, "Fps %f", GetFps());
 	// Enemies
-	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.size());
+	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.getSize());
 	// Bullets
 	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", state.hitCount);
 	DrawString(SCREEN_WIDTH + 1, line++, "P %.0f", beam.getPower());
@@ -62,10 +63,7 @@ void DrawScreen(void) {
 	enemyBullets.draw();
 	
 	// 绘制敌人
-	for (deque<Entity>::iterator itr = enemies.begin(); itr != enemies.end(); itr++) {
-		itr->draw();
-	}
+	enemies.draw();
 
 	beam.draw(state.beam);
 }
-

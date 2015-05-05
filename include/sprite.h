@@ -19,5 +19,3 @@ extern Entity bulletSample;
 extern Entity enemySample;
 extern Entity enemyBulletSample;
 extern Entity bossSample;
-
-extern deque<Entity> enemies;
