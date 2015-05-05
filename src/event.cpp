@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "game.h"
 #include "weapon.h"
+#include "draw.h"
 extern Bullets bullets;
 extern Bullets enemyBullets;
 
@@ -12,24 +13,17 @@ int hitten = 0;
 static float MaxPow = 100.0f;
 float beampower = MaxPow;
 
-void Beam()
+static Beam beam(BWHITE, 100, 1000.0f, 1);
+void BeamUpdate()
 {
-	if (IsKeyPressed(VK_SPACE) && beampower > 1.0f) {
-		if (beampower > 2.0f) {
-			setConsoleColor(BWHITE);
-			int x, y, w, h;
-			player.getPos(x, y);
-			player.getSize(w, h);
-			RepDrawColumn(x + w / 2, 0, y, ' ');
-
-			beampower -= MaxPow * Fps.GetPast();
-			resetConsoleColor();
+	if (IsKeyPressed(VK_SPACE) && beam.getPower() > 1.0f) {
+		if (beam.getPower() > 2.0f) {
+			beam.fire(player.mid(), player.up(), U);
+			beam.draw();
 		}
 	}
 	else {
-		beampower += Fps.GetPast();
-		if (beampower > MaxPow)
-			beampower = MaxPow;
+		beam.charge(10.0f * Fps.GetPast());
 	}
 }
 
@@ -58,56 +52,13 @@ void EnemyMove()
 	deque<Entity>::iterator itr = enemies.begin();
 	while (itr != enemies.end()) {
 		n += N * Fps.GetPast();
-		enemyBullets.fire(itr->mid(), itr->down(), D, 0);
-		UINT32 sw = rand() % 100;
-		if (sw < 2)
-		{
-			if (n > 5.0f) {
-				int x, y, w, h;
-				itr->getPos(x, y);
-				itr->getSize(w, h);
-				enemyBulletSample.setPos(x + (w - 1) / 2, y);
-				if (sw == 1)
-				{
-					int h = 0, l = D;
-					int x0, x1, y0, y1;
-					int w0, w1, h0, h1;
-					player.getPos(x0, y0);
-					(*itr).getPos(x1, y1);
-					player.getSize(w0, h0);
-					(*itr).getSize(w1, h1);
-					if (x0 + w0 < x1)
-						h = L;
-					else if (x0 > x1 + w1)
-						h = R;
-					if (y0 + h0 < y1)
-						l = U;
-					enemyBulletSample.dir = h | l;
-				}
-				else
-					enemyBulletSample.dir = D;
-
-				enemyBullets.fire(itr->mid(), itr->down(), D, 0);
-				n = 0.0f;
-			}
-		}
-		else if (sw < 90)
-		{
-			itr++;
-		}
-		else
-		{
-			if (!itr->move(D))
-				itr = enemies.erase(itr);
-			else
-				itr++;
-		}
-
+		UINT32 sw = rand() % 10000;
+		itr++;
 	}
 }
 void CreateEnemy() {
 	int a = rand() % 10;
-	if (enemies.size() > 5)
+	if (enemies.size() > 0)
 		return;
 	if (a == 5) {
 		int x = rand() % (SCREEN_WIDTH - 3);
@@ -136,7 +87,7 @@ int EraseDeadEntity(deque<Entity> &ent)
   isCollide 检查 实体x 是否与一组实体碰撞。
   并根据参数判断是否删除组内实体
  ****************************************/
-int Collide(Entity x, deque<Entity> &group, bool kill)
+int Collide(Entity &x, deque<Entity> &group, bool kill)
 {
 	auto itr = group.begin();
 	int count = 0;
@@ -175,19 +126,22 @@ int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
 void CollisionDetection()
 {
 	hitten += Collide(enemies, bullets.getEntry(), true);
+	hitten += Collide(beam.getJudge(), enemies, true);
 }
 
 void Movement()
 {
-	CollisionDetection();
-	EraseDeadEntity(enemies);
 	EnemyMove();
 	CollisionDetection();
 	EraseDeadEntity(enemies);
+
 	bullets.fire(player.mid(), player.up(), U, 0x5a);
 	CollisionDetection();
 	EraseDeadEntity(enemies);
 	PlayerMovement();
-	EraseDeadEntity(enemies);
+	if (Collide(player, enemies, true) > 0)
+		PlayerState = DEAD;
+	if (Collide(player, enemyBullets.getEntry(), true))
+		PlayerState = DEAD;
 	enemyBullets.update();
 }

@@ -6,6 +6,7 @@
 #include "fps.h"
 #include "draw.h"
 #include "weapon.h"
+#include "weapon.h"
 extern Bullets bullets;
 int count;
 extern int hitten;
@@ -24,7 +25,8 @@ int GameMainLoop()
 			ClearConsoleBuffer();  // 清空缓冲区
 			CreateEnemy();
 			bullets.update();
-			Beam();
+			BeamUpdate();
+			VShooter(player.mid(), player.up());
 			Movement();
 			DrawScreen();
 			RedrawConsole();

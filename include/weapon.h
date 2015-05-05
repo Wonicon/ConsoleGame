@@ -7,20 +7,23 @@ using std::deque;
 class Beam
 {
 private:
-	Entity ent;     // 存储图像等内容
-	char repImage;
-	int color;
-	int power;
-	int atk;
-	int width, height;
-	Entity *owner;  // 激光需要根据所有者的位置来移动，同时也要据此判断所有权
+	Entity ent;     // Entity不承担画图任务，只是一个判定点组件
+	float power;
+	float maxPower;
+	int attack;
+	int attribute;
+	char BeamCharBuffer[SCREEN_HEIGHT];
+	int BeamAttrBuffer[SCREEN_HEIGHT];
 public:
-	Beam(char ch, int attr, int atk, int pow, Entity *obj);
-	void update();
-	void draw();
-	void charge();
-	int getPower() const;
-	int attack(deque<Entity> enemy);
+	Beam(int attr, int attack, int power, int width);
+	void fire(int x, int y, int dir);         // 形成射线判定，同时消耗能量
+	void draw();                     // 画射线，最好在fire之后调用
+	void charge(float n);            // 充能
+	/**********************/
+	float getPower() const;          // 获得能量
+	int getAtk() const;              // 获得攻击力
+	Entity &getJudge(void);
+
 };
 
 class Bullets
@@ -36,18 +39,15 @@ public:
 		:atk(attack), sample(sample), frequence(frequence), accumulate(0.0f){}
 	void fire(int x, int y, int dir, int enableKey = 0)
 	{
-		accumulate += frequence * Fps.GetPast();
-		if (enableKey == 0 && accumulate > 1.0f) {
+		if (enableKey == 0) {
 			sample.setPos(x, y);
 			sample.dir = dir;
 			entries.push_back(sample);
-			accumulate = 0.0f;
 		}
-		else if (accumulate > 1.0f && IsKeyPressed(enableKey)) {
+		else if (IsKeyPressed(enableKey)) {
 			sample.setPos(x, y);
 			sample.dir = dir;
 			entries.push_back(sample);
-			accumulate = 0.0f;
 		}
 	}
 	void move()
@@ -81,3 +81,5 @@ public:
 		return entries;
 	}
 };
+
+void VShooter(int, int);

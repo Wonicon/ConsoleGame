@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include <stdio.h>
 #include <windows.h>
 #include <assert.h>
 #include <string.h>
@@ -21,18 +21,17 @@
 
 class Entity {
 private:
-	int scr_x, scr_y;
-	int life;
-	int max_life;
 	float offset;
-	char image[BUFFER_MAX];
-	int attr[BUFFER_MAX];
+	const char *image;
+	const int *attr;
+	bool toDel;
 public:
+	int scr_x, scr_y;
+	int width, height;
 	int vel;
 	int dir;
-	int width, height;
-	Entity(int x, int y, int w, int h, int v, int hp, int attack, char img[], int attribute[]);
-
+	Entity(int x, int y, int w, int h, int v, char *img, int *attribute)
+		:offset(0.0f), width(w), height(h), vel(v), image(img), attr(attribute), dir(STOP), toDel(false){}
 	/*******************************************
 	  实体相关
 	 *******************************************/
@@ -51,44 +50,36 @@ public:
 	bool isHitWindow(int x0, int y0, int w, int h);
 	bool isInImage(int x, int y) const
 	{
-
-		bool a1 = scr_x <= x;
-		bool a2 = x < scr_x + width;
-		bool a3 = scr_y <= y;
-		bool a4 = y < scr_y + height;
-		return a1 && a2 && a3 && a4 && getChar(x, y) != JMP_CHAR;
+		bool l = scr_x <= x;
+		bool r = x < scr_x + width;
+		bool u = scr_y <= y;
+		bool d = y < scr_y + height;
+		return l && r && u && d;
 	}
-
-	/**********************************************
-	  RPG 内容
-	 **********************************************/
-	// 判断实体是否存活
-	int  getLife(void) const
-	{
-		return life;
-	}
-	bool isAlive()
-	{
-		return life > 0;
-	}
-	void hurt(int atk)
-	{
-		life -= atk;
-	}
-	void hurt(Entity &enemy)
-	{
-		life -= enemy.atk;
-	}
-	void heal(int recover)
-	{
-		life = (life + recover) % max_life;
-	}
-	void die()
-	{
-		life = 0;
-	}
+	bool isInScreen();
+	void del(void);
 
 	// 读取函数
+	int mid(void) const
+	{
+		return scr_x + width / 2;
+	}
+	int down(void) const
+	{
+		return scr_y + height - 1;
+	}
+	int up(void) const
+	{
+		return scr_y;
+	}
+	int left(void) const
+	{
+		return scr_x;
+	}
+	int right(void) const
+	{
+		return scr_x + width - 1;
+	}
 	void getPos(int &x, int &y) const
 	{
 		x = scr_x;
@@ -101,9 +92,9 @@ public:
 	}
 	char getChar(int x, int y) const
 	{
-		return image[x + y * width];
+		return image[x - scr_x + (y - scr_y) * width];
 	}
-	bool rangeLimit();
+	bool isDel(void) const;
 	const char *getImage(void) const
 	{
 		return image;
@@ -111,5 +102,6 @@ public:
 
 	friend void DrawObject(Entity& obj);
 	friend bool Collide(Entity &, Entity &);
+	friend class Beam;
 };
 

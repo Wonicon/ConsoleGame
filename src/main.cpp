@@ -10,7 +10,6 @@ int main(void)
 	InitConsole();
 	while (1) {
 		GameMainLoop();
-
 		ClearConsoleBuffer();
 		DrawString((WIDTH - strlen("You are dead")) / 2, HEIGHT / 2, "You are dead");
 		RedrawConsole();

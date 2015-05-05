@@ -86,22 +86,22 @@ void Entity::draw()
 
 /*******************************************
    isCollide 检查 obj 是否碰撞到 hitter
+   一般认为hitter比较小
 *******************************************/
 bool Entity::collide(Entity &hitter)
 {
-	for (int i = scr_x; i < scr_x + width; i++) {
-		for (int j = scr_y; j < scr_y + height; j++) {
-			if (image[i + j * width] == JMP_CHAR) {
+	for (int i = hitter.scr_x; i < hitter.scr_x + hitter.width; i++) {
+		for (int j = hitter.scr_y; j < hitter.scr_y + hitter.height; j++) {
+			if (hitter.getChar(i, j) == JMP_CHAR) {
 				continue;
 			}
-			if (hitter.isInImage(i, j)) {
+			if (isInImage(i, j)) {
 				return true;
 			}
 		}
 	}
 	return false;
 }
-
 void Entity::del(void)
 {
 	toDel = true;

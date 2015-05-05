@@ -1,7 +1,7 @@
 ﻿#pragma once
 // 绘图相关函数
 #include <Windows.h>
-
+#include <stdio.h>
 class Entity;
 void DrawString(int x, int y, CHAR str[]);
 void DrawColumn(int x, int y, CHAR str[]);
