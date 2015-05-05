@@ -91,7 +91,6 @@ void CollisionDetection()
 	state.hitCount += Collide(beam.getJudge(), enemies, true);
 }
 
-
 void Movement()
 {
 	CollisionDetection();

@@ -19,7 +19,8 @@
 
 #define BUFFER_MAX (128)
 
-class Entity {
+class Entity
+{
 private:
 	float offset;
 	const char *image;
@@ -106,3 +107,95 @@ public:
 };
 
 typedef Entity *PEntity;
+
+class EntitySet
+{
+private:
+#define LEN 128
+	PEntity entries[LEN];
+	int size;
+	bool deleteEntity(int i)
+	{
+		if (entries[i] == NULL)
+			return false;
+		delete entries[i];
+		entries[i] = NULL;
+		size--;
+		return true;
+	}
+public:
+	EntitySet(void) : size(0)
+	{
+		for (int i = 0; i < LEN; i++) {
+			entries[i] = NULL;
+		}
+	}
+	bool addNewEntity(Entity& x)
+	{
+		if (size == LEN)
+			return false;
+
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] == NULL) {
+				entries[i] = new Entity(x);
+				size++;
+				return true;
+			}
+		}
+
+		return false;
+	}
+	void draw(void)
+	{
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL) {
+				entries[i]->draw();
+			}
+		}
+	}
+	void erase(void)
+	{
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL && entries[i]->isDel()) {
+				deleteEntity(i);
+			}
+		}
+	}
+	void move(void)
+	{
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL && !entries[i]->move()) {
+				deleteEntity(i);
+			}
+		}
+	}
+	void clear(void)
+	{
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL) {
+				deleteEntity(i);
+			}
+		}
+		size = 0;
+	}
+	int collide(Entity& obj)
+	{
+		int hitCount = 0;
+		for (int i = 0; i < LEN; i++) {
+			if (entries[i] != NULL && obj.collide(*entries[i])) {
+				obj.del();
+				hitCount++;
+			}
+		}
+		return hitCount;
+	}
+	int collide(EntitySet& s)
+	{
+		int count = 0;
+		for (int i = 0; i < LEN; i++) {
+			if (s.entries[i] != NULL) {
+				count += collide(*(s.entries[i]));
+			}
+		}
+	}
+};

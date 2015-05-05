@@ -2,8 +2,6 @@
 
 #include "entity.h"
 #include "fps.h"
-#include <deque>
-using std::deque;
 
 // 这些武器类的行为需要频率控制，原来的代码到处可见如下这种重复的频率控制结构
 // n += Freq * Fps.getPast();
@@ -36,10 +34,7 @@ public:
 class Bullets
 {
 private:
-#define LEN 128
-	//deque<Entity> entries;
-	PEntity entries[LEN];
-	int size;
+	EntitySet E;
 	int  atk;
 	Entity &sample;
 	float freq;
@@ -47,71 +42,22 @@ private:
 	int count;
 public:
 	Bullets(int attack, float frequence, Entity &sample)
-		:atk(attack), sample(sample), freq(frequence), acc(0.0f), count(10000)
-	{
-		for (int i = 0; i < LEN; i++) {
-			entries[i] = NULL;
-		}
-		size = 0;
-	}
-	bool addNewEntity(Entity& x)
-	{
-		if (size == LEN)
-			return false;
-
-		for (int i = 0; i < LEN; i++) {
-			if (entries[i] == NULL) {
-				entries[i] = new Entity(x);
-				size++;
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	void deleteEntity(int i)
-	{
-		delete entries[i];
-		entries[i] = NULL;
-		size--;
-	}
+		:atk(attack), sample(sample), freq(frequence), acc(0.0f), count(10000){}
 	void fire(int x, int y, int dir, bool en = false)
 	{
 		// en 是为了允许敌人无限子弹的
 		if (en || count > 0) {
 			sample.setPos(x, y);
 			sample.dir = dir;
-			addNewEntity(sample);
+			E.addNewEntity(sample);
 			if (!en) count--;
 		}
 	}
-	void move()
-	{
-		for (int i = 0; i < LEN; i++) {
-			if (entries[i] != NULL && !entries[i]->move()) {
-				deleteEntity(i);
-			}
-		}
-	}
-	void erase()
-	{
-		for (int i = 0; i < LEN; i++) {
-			if (entries[i] != NULL && entries[i]->isDel()) {
-				deleteEntity(i);
-			}
-		}
-	}
-	void draw()
-	{
-		for (int i = 0; i < LEN; i++) {
-			if (entries[i] != NULL) {
-				entries[i]->draw();
-			}
-		}
-	}
+	void draw(void) { E.draw(); }
+	void erase(void) { E.erase(); }
 	void update() {
-		erase();
-		move();
+		E.erase();
+		E.move();
 	}
 	bool enable(bool clear)
 	{
@@ -119,12 +65,7 @@ public:
 	}
 	void clear(void)
 	{
-		for (int i = 0; i < LEN; i++) {
-			if (entries[i] != NULL) {
-				deleteEntity(i);
-			}
-		}
-		size = 0;
+		E.clear();
 	}
 	int getCount(void) const
 	{
@@ -134,17 +75,9 @@ public:
 	{
 		count += n;
 	}
-	int collide(Entity& obj)
-	{
-		int hitCount = 0;
-		for (int i = 0; i < LEN; i++) {
-			if (entries[i] != NULL && obj.collide(*entries[i])) {
-				obj.del();
-				hitCount++;
-			}
-		}
-		return hitCount;
-	}
+	int collide(Entity& obj) { return E.collide(obj); }
+	int collide(EntitySet& s) { return E.collide(s); }
+	EntitySet& getSet(void) { return E; }
 };
 
 void Shooter(Bullets& blt, Entity& obj, int dir);
