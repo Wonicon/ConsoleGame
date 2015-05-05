@@ -63,3 +63,7 @@ Entity enemyBulletSample(
 	1, 1,
 	4,
 	enemyBulletImg, enemyBulletAttr);
+
+deque<Entity> enemies;
+deque<Entity> bullets;
+deque<Entity> beam;

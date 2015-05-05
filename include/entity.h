@@ -19,8 +19,7 @@
 
 #define BUFFER_MAX (128)
 
-class Entity
-{
+class Entity {
 private:
 	float offset;
 	const char *image;

@@ -2,7 +2,6 @@
 #include "weapon.h"
 #include "game-state.h"
 #include "fps.h"
-#include "component.h"
 
 Bullets bullets(100, 10.0f, bulletSample);
 Bullets enemyBullets(100, 1.0f, enemyBulletSample);
