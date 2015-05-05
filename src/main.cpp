@@ -4,6 +4,7 @@
 #include "draw.h"
 #include "event.h"
 #include "game.h"
+#include "game-state.h"
 
 int main(void)
 {

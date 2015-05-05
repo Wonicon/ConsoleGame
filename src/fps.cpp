@@ -48,11 +48,13 @@ float GetPast(void)
 }
 
 // 频率锁, 顺便直接使用 past 提高效率
-bool FreqLock(float &current, float freq)
+// 但是往往不只是积累够了就能清零，而是要保证允许其它事件触发
+// 所以使用clear使能，同时只有在clear使能有效时才是真的有效
+bool FreqLock(float &current, float freq, bool clear)
 {
 	if (current > 1.0f) {
-		current = 0.0f;
-		return true;
+		if (clear) current = 0.0f;
+		return clear;
 	}
 	else {
 		current += past * freq;

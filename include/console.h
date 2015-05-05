@@ -17,17 +17,6 @@ void InitConsole(void);
 bool IsWindowActive(void);
 void RedrawConsole(void);
 
-typedef int KEYCODE;
-inline int IsKeyPressed(KEYCODE keycode)
-{
-	short state = GetAsyncKeyState(keycode);
-	if ((state & 0x8000) == 0x8000) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
-}
 /* 只在缓冲区上操作的函数 */
 // 清空缓冲区，清空行为不会立即反应在屏幕上，只是为后面完全重绘做准备
 void ClearConsoleBuffer(void);

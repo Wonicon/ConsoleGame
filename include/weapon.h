@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.h"
+#include "fps.h"
 #include <deque>
 using std::deque;
 
@@ -37,24 +38,17 @@ class Bullets
 private:
 	deque<Entity> entries;
 	int  atk;
-	float frequence;
-	float accumulate;
 	Entity &sample;
+	float freq;
+	float acc;
 public:
 	Bullets(int attack, float frequence, Entity &sample)
-		:atk(attack), sample(sample), frequence(frequence), accumulate(0.0f){}
-	void fire(int x, int y, int dir, int enableKey = 0)
+		:atk(attack), sample(sample), freq(frequence), acc(0.0f){}
+	void fire(int x, int y, int dir)
 	{
-		if (enableKey == 0) {
-			sample.setPos(x, y);
-			sample.dir = dir;
-			entries.push_back(sample);
-		}
-		else if (IsKeyPressed(enableKey)) {
-			sample.setPos(x, y);
-			sample.dir = dir;
-			entries.push_back(sample);
-		}
+		sample.setPos(x, y);
+		sample.dir = dir;
+		entries.push_back(sample);
 	}
 	void move()
 	{
@@ -86,9 +80,17 @@ public:
 	{
 		return entries;
 	}
+	bool enable(bool clear)
+	{
+		return FreqLock(acc, freq, clear);
+	}
+	void clear(void)
+	{
+		entries.clear();
+	}
 };
 
-void VShooter(Bullets& blt, int x, int y, int dir);
+void Shooter(Bullets& blt, Entity& obj, int dir);
 
 
 extern Bullets bullets;

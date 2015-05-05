@@ -5,6 +5,7 @@
 #include "console.h"
 #include <stdio.h>
 #include "weapon.h"
+#include "game-state.h"
 extern Bullets bullets;
 extern Bullets enemyBullets;
 // 绘制字符串
@@ -35,7 +36,6 @@ void DrawObject(Entity& obj)
 #include "weapon.h"
 #include "fps.h"
 
-extern int hitten; // 消灭敌人数量
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
 void DrawScreen(void) {
@@ -52,7 +52,7 @@ void DrawScreen(void) {
 	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.size());
 	// Bullets
 	// Hitten
-	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", hitten);
+	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", state.hitCount);
 	DrawString(SCREEN_WIDTH + 1, line++, "P %.0f", beam.getPower());
 
 	// 绘制自机

@@ -7,7 +7,3 @@ int GameMainLoop();
 int ShowStartMenu();
 
 extern int PlayerState;
-
-#define DEAD 1
-#define ALIVE 2
-#define WIM 3

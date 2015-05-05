@@ -1,18 +1,18 @@
 ﻿#include <stdlib.h>
-#include "event.h"
+#include <windows.h>
 #include "sprite.h"
 #include "console.h"
 #include "entity.h"
 #include "game.h"
 #include "weapon.h"
 #include "draw.h"
-
-int hitten = 0;
+#include "game-state.h"
+#include "fps.h"
 
 // BeamUpdate 描述玩家的激光具体行为
 void BeamUpdate()
 {
-	if (IsKeyPressed(VK_SPACE) && beam.getPower() > 1.0f) {
+	if (state.beam && beam.getPower() > 1.0f) {
 		if (beam.getPower() > 2.0f) {
 			beam.fire(player.mid(), player.up(), U);
 			beam.draw();
@@ -29,10 +29,10 @@ void BeamUpdate()
 void PlayerMovement()
 {
 	int dir = STOP;
-	if (IsKeyPressed(VK_UP))         dir |= U;
-	else if (IsKeyPressed(VK_DOWN))  dir |= D;
-	if (IsKeyPressed(VK_LEFT))       dir |= L;
-	else if (IsKeyPressed(VK_RIGHT)) dir |= R;
+	if (state.up)         dir |= U;
+	else if (state.down)  dir |= D;
+	if (state.left)       dir |= L;
+	else if (state.right) dir |= R;
 	player.move(dir);
 }
 
@@ -101,8 +101,8 @@ int Collide(deque<Entity> &objs, deque<Entity> &hitters, bool kill)
 // 所有碰撞检测行为都在这里处理
 void CollisionDetection()
 {
-	hitten += Collide(enemies, bullets.getEntry(), true);
-	hitten += Collide(beam.getJudge(), enemies, true);
+	state.hitCount += Collide(enemies, bullets.getEntry(), true);
+	state.hitCount += Collide(beam.getJudge(), enemies, true);
 }
 
 
@@ -110,17 +110,15 @@ void Movement()
 {
 	CollisionDetection();
 	EraseDeadEntity(enemies);
-
-	bullets.fire(player.mid(), player.up(), U, 0x5a);
+	Shooter(bullets, player, U);
 	bullets.update();
 	BeamUpdate();
-	VShooter(bullets, player.mid(), player.up(), U);
 	CollisionDetection();
 	EraseDeadEntity(enemies);
 	PlayerMovement();
 	if (Collide(player, enemies, true) > 0)
-		PlayerState = DEAD;
+		state.playerState = DEAD;
 	if (Collide(player, enemyBullets.getEntry(), true) > 0)
-		PlayerState = DEAD;
+		state.playerState = DEAD;
 	enemyBullets.update();
 }

@@ -1,5 +1,6 @@
 #include "sprite.h"
 #include "weapon.h"
+#include "game-state.h"
 #include "fps.h"
 
 Bullets bullets(100, 10.0f, bulletSample);
@@ -69,13 +70,20 @@ Entity &Beam::getJudge(void)
 	return ent;
 }
 
-void VShooter(Bullets& blt, int x, int y, int dir)
+void Shooter(Bullets& blt, Entity& obj, int dir)
 {
-	static float n = 0.0f;
-	if (FreqLock(n, 10.0f)) {
-		if (IsKeyPressed(VK_SHIFT)) {
-			bullets.fire(x, y, UL);
-			bullets.fire(x, y, UR);
+	bool en = state.hShot | state.vShot | state.twoWayShot;
+	if (blt.enable(en)) {
+		if (state.hShot) {
+			blt.fire(obj.left() - 1, obj.up(), L);
+			blt.fire(obj.right() + 1, obj.up(), R);
+		}
+		if (state.vShot) {
+			blt.fire(obj.mid(), obj.up() - 1, dir);
+		}
+		if (state.twoWayShot) {
+			blt.fire(obj.mid(), obj.up(), dir | L);
+			blt.fire(obj.mid(), obj.up(), dir | R);
 		}
 	}
 }
