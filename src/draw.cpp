@@ -32,11 +32,10 @@ void DrawObject(Entity& obj)
 #include <stdio.h>
 #include <Windows.h>
 #include "sprite.h"
+#include "weapon.h"
 #include "fps.h"
 
 extern int hitten; // 消灭敌人数量
-CFPS Fps;
-extern float beampower;
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
 void DrawScreen(void) {
@@ -46,15 +45,15 @@ void DrawScreen(void) {
 	///* 输出文字信息 */
 	int line = 0;
 	// Fps
-	Fps.UpdateFPS();
-	DrawString(SCREEN_WIDTH + 1, line++, "Fps %.1f", Fps.GetFps());
-	DrawString(SCREEN_WIDTH + 1, line++, "Past time %.1f", Fps.GetPast());
+	UpdateFps();
+	DrawString(SCREEN_WIDTH + 1, line++, "Fps %f", GetFps());
+	DrawString(SCREEN_WIDTH + 1, line++, "Past time %f", GetPast());
 	// Enemies
 	DrawString(SCREEN_WIDTH + 1, line++, "Enemies %d", enemies.size());
 	// Bullets
 	// Hitten
 	DrawString(SCREEN_WIDTH + 1, line++, "Hits %d", hitten);
-	DrawString(SCREEN_WIDTH + 1, line++, "P %.0f", beampower);
+	DrawString(SCREEN_WIDTH + 1, line++, "P %.0f", beam.getPower());
 
 	// 绘制自机
 	player.draw();

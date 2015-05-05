@@ -47,7 +47,7 @@ bool Entity::move(int newDir)
 	else if (newDir == STOP)
 		return true;
 
-	offset += Fps.GetPast() * vel;
+	offset += GetPast() * vel;
 	if (offset > 1.0f) {
 		float floorOffset = floor(offset);
 		switch (newDir) {

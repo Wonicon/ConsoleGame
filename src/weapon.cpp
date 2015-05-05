@@ -1,11 +1,17 @@
 #include "sprite.h"
 #include "weapon.h"
+#include "fps.h"
 
 Bullets bullets(100, 10.0f, bulletSample);
 Bullets enemyBullets(100, 1.0f, enemyBulletSample);
+Beam beam(BWHITE, 100, 1000.0f);
 
-Beam::Beam(int attr, int attack, int power, int width)
-	:ent(0, 0, 1, SCREEN_HEIGHT, 0, (char *)BeamCharBuffer, (int *)BeamAttrBuffer),
+// 激光射线的位置受到所属对象（这个所属只是逻辑上的）的位置影响
+// 所以不太需要在构造函数里指定。而激光的图像是在游戏设计时不太需要动态指定的，
+// 甚至写死在全局数组里也不是不可。
+// 不过暂时没有实现 1 宽度以外的激光，感觉判定点有点麻烦，可以用多个激光组合起来实现
+Beam::Beam(int attr, int attack, int power)
+	:ent(0, 0, 1, SCREEN_HEIGHT, 0, BeamCharBuffer, BeamAttrBuffer),
 	attribute(attr), attack(attack), power(power),
 	maxPower(power)
 {
@@ -15,6 +21,9 @@ Beam::Beam(int attr, int attack, int power, int width)
 		BeamAttrBuffer[i] = attr;
 	}
 }
+
+// fire 是用来生成判定点的，不过碰撞检测函数需要检查透明字符 JMP_CHAR
+// 所以 entry 一开始就要设置成可预期的最大尺寸
 void Beam::fire(int x, int y, int dir)
 {
 	// x, y 是射线的起点
@@ -28,7 +37,8 @@ void Beam::fire(int x, int y, int dir)
 		ent.scr_y = y;
 		ent.height = SCREEN_HEIGHT - y;
 	}
-	//power -= 1.0f;
+
+	power -= 10.0f * GetPast();
 }
 
 void Beam::draw()
@@ -59,16 +69,13 @@ Entity &Beam::getJudge(void)
 	return ent;
 }
 
-void VShooter(int x, int y)
+void VShooter(Bullets& blt, int x, int y, int dir)
 {
-	static float N = 10.0f;
 	static float n = 0.0f;
-	n += N * Fps.GetPast();
-	if (n > 1.0f) {
+	if (FreqLock(n, 10.0f)) {
 		if (IsKeyPressed(VK_SHIFT)) {
 			bullets.fire(x, y, UL);
 			bullets.fire(x, y, UR);
 		}
-		n = 0.0f;
 	}
 }

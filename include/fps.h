@@ -1,20 +1,13 @@
 ﻿#pragma once
-#pragma comment( lib,"winmm.lib" )
-class CFPS
-{
-public:
-	CFPS(void);
-	void UpdateFPS(void);  // 刷新时间
-	int GetLastTime(void) { return lastTime; }
-	float GetFps(void) { return fps; }
-	float GetPast(void) { return past; }
-private:
-	int startTime;   // 起始时间(ms)
-	int lastTime;    // 上次更新的时间(ms)
-	int nFrames;     // 总帧数
-	int lastFrames;  // 上次更新的总帧数
-	float fps;
-	float past;
-};
 
-extern CFPS Fps;
+// 重要，是fps相关函数功能正确的关键，刷新时间，确保在每次循环都执行一次
+void UpdateFps(void);
+
+// 获得FPS
+float GetFps(void);
+
+// 重要，获得上一帧经过的时间，是时间控制的关键
+float GetPast(void);
+
+// 重要，频率控制的关键
+bool FreqLock(float &current, float freq);
