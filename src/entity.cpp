@@ -92,12 +92,8 @@ bool Entity::collide(Entity &hitter)
 {
 	for (int i = hitter.scr_x; i < hitter.scr_x + hitter.width; i++) {
 		for (int j = hitter.scr_y; j < hitter.scr_y + hitter.height; j++) {
-			if (hitter.getChar(i, j) == JMP_CHAR) {
-				continue;
-			}
-			if (isInImage(i, j)) {
-				return true;
-			}
+			if (hitter.getChar(i, j) == JMP_CHAR) continue;
+			if (isInImage(i, j)) return true;
 		}
 	}
 	return false;
