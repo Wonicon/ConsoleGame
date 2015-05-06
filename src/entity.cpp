@@ -8,16 +8,16 @@ bool Entity::isInScreen(void)
 		scr_x = 0;
 		flag = false;
 	}
-	else if (scr_x > SCREEN_WIDTH - width) {
-		scr_x = SCREEN_WIDTH - width;
+	else if (scr_x > ScreenWidth - width) {
+		scr_x = ScreenWidth - width;
 		flag = false;
 	}
 	if (scr_y < 0) {
 		scr_y = 0;
 		flag = false;
 	}
-	else if (scr_y > SCREEN_HEIGHT - height) {
-		scr_y = SCREEN_HEIGHT - height;
+	else if (scr_y > ScreenHeight - height) {
+		scr_y = ScreenHeight - height;
 		flag = false;
 	}
 	return flag;
@@ -66,13 +66,13 @@ bool Entity::move(int newDir)
 	dir = newDir;
 
 	bool flag = true;
-	if (scr_y > SCREEN_HEIGHT - height)
-		scr_y = SCREEN_HEIGHT - height, flag = false;
+	if (scr_y > ScreenHeight - height)
+		scr_y = ScreenHeight - height, flag = false;
 	else if (scr_y < 0)
 		scr_y = 0, flag = false;
 
-	if (scr_x > SCREEN_WIDTH - width)
-		scr_x = SCREEN_WIDTH - width, flag = false;
+	if (scr_x > ScreenWidth - width)
+		scr_x = ScreenWidth - width, flag = false;
 	else if (scr_x < 0)
 		scr_x = 0, flag = false;
 

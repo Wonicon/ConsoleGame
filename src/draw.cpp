@@ -37,10 +37,17 @@ void DrawObject(Entity& obj)
 #include "weapon.h"
 #include "fps.h"
 
+extern int bossLife;
+extern bool haveBoss;
+extern bool beamEN;
+extern Entity boss;
+extern Beam bossbeam;
+extern Bullets bossbullets;
+extern int lv;
 #pragma warning(disable : 4996)
 // 集中管理除字符串以外的所有绘图
 void DrawScreen(void) {
-	DrawString(0, 0, "hello, world");
+	DrawString(0, 0, "Level %d", lv);
 	RepDrawColumn(SCREEN_WIDTH, 0, HEIGHT, '|');
 
 	///* 输出文字信息 */
@@ -64,6 +71,13 @@ void DrawScreen(void) {
 	
 	// 绘制敌人
 	enemies.draw();
+	DrawString(SCREEN_WIDTH + 1, line++, "Player HP %d", state.hp);
+	if (haveBoss) {
+		DrawString(SCREEN_WIDTH + 1, line++, "Boss Life %d", bossLife);
+		boss.draw();
+		bossbeam.draw(beamEN);
+		bossbullets.draw();
+	}
 
 	beam.draw(state.beam);
 }

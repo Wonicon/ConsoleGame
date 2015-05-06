@@ -9,7 +9,8 @@
 #define SCREEN_HEIGHT 35
 #define TITLE "Ascii Shooter"
 #define BOUNDARY_CHECK(x, y) (0 <= x && x < WIDTH && 0 <= y && y < HEIGHT)
-
+extern int ScreenWidth;
+extern int ScreenHeight;
 typedef char CHAR;
 
 /* 涉及系统功能 */

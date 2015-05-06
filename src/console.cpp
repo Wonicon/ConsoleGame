@@ -3,6 +3,8 @@
 #include <assert.h>
 #include "sprite.h"
 
+int ScreenWidth = SCREEN_WIDTH;
+int ScreenHeight = SCREEN_HEIGHT;
 const SMALL_RECT windowSize = { 0, 0, WIDTH - 1, HEIGHT - 1 };
 const COORD bufferSize = { WIDTH, HEIGHT };
 const COORD charBufferSize = { WIDTH, HEIGHT };

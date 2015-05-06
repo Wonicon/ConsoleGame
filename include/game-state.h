@@ -6,13 +6,13 @@ enum State
 	/********/
 	EASY, NORMAL, HARD
 };
-void InitGameState(void);
+void InitGameState(int lv);
 void UpdateGameState(void);
 
 struct GameState
 {
 	State playerState;
-	State level;
+	int level;
 	int hitCount;
 	bool hShot;
 	bool vShot;
@@ -22,6 +22,7 @@ struct GameState
 	bool right;
 	bool up;
 	bool down;
+	int hp;
 };
 
 extern GameState state;

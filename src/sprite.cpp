@@ -1,8 +1,8 @@
-#include "entity.h"
+ï»¿#include "entity.h"
 #include "sprite.h"
 #include <deque>
 using std::deque;
-// ×Ô»ú
+// è‡ªæœº
 char playerImg[] = "<=#=>";
 int playerAttr[] = { FWHITE, FWHITE, FWHITE, FWHITE, FWHITE };
 Entity player(
@@ -11,51 +11,27 @@ Entity player(
 	40,
 	playerImg, playerAttr);
 
-// µÐ»ú
+// æ•Œæœº
 char enemyImg[] = ">_<";
 int enemyAttr[] = { FWHITE, FWHITE, FWHITE };
-// ³£±¸Ò»¸öÑù±¾¶ÔÏó£¬¼ÓÈëÈÝÆ÷Ê±ËÆºõ±ÜÃâ²»ÁË¿½±´¹¹Ôì£¬ÕâÑùËÆºõ¿ÉÒÔ°Ñ²ÎÊýµÄ¹¹ÔìÎö¹¹½ÚÊ¡µô£¿
+// å¸¸å¤‡ä¸€ä¸ªæ ·æœ¬å¯¹è±¡ï¼ŒåŠ å…¥å®¹å™¨æ—¶ä¼¼ä¹Žé¿å…ä¸äº†æ‹·è´æž„é€ ï¼Œè¿™æ ·ä¼¼ä¹Žå¯ä»¥æŠŠå‚æ•°çš„æž„é€ æžæž„èŠ‚çœæŽ‰ï¼Ÿ
 Entity enemySample(
 	0, 0,
 	3, 1,
 	5,
 	enemyImg, enemyAttr);
 
-// µÐ»úBoss
-char bossImg[] =
-"\
- &  #|#  & \
--||--|--||-\
- |-|-|-|-| \
- |  |||  | \
- $   V   $ \
-";
-int bossAttr[] =
-{
-	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
-	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
-	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
-	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
-	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
-};
-// ³£±¸Ò»¸öÑù±¾¶ÔÏó£¬¼ÓÈëÈÝÆ÷Ê±ËÆºõ±ÜÃâ²»ÁË¿½±´¹¹Ôì£¬ÕâÑùËÆºõ¿ÉÒÔ°Ñ²ÎÊýµÄ¹¹ÔìÎö¹¹½ÚÊ¡µô£¿
-Entity bossSample(
-	(SCREEN_WIDTH - 11) / 2, 0,
-	11, 5,
-	0,
-	bossImg, bossAttr);
-
-// ×Óµ¯
+// å­å¼¹
 char bulletImg[] = "0";
 int bulletAttr[] = { FWHITE };
-// Í¬µÐ»úµÄÑù±¾¶ÔÏó£¬ÒòÎª×Óµ¯ºÍµÐ»ú¶¼ÊÇÒª´óÁ¿ÖØ¸´Éú³ÉµÄ
+// åŒæ•Œæœºçš„æ ·æœ¬å¯¹è±¡ï¼Œå› ä¸ºå­å¼¹å’Œæ•Œæœºéƒ½æ˜¯è¦å¤§é‡é‡å¤ç”Ÿæˆçš„
 Entity bulletSample(
 	0, 0,
 	1, 1,
 	60,
 	bulletImg, bulletAttr);
 
-// ×Óµ¯
+// å­å¼¹
 char enemyBulletImg[] = "*";
 int enemyBulletAttr[] = { FWHITE };
 Entity enemyBulletSample(
@@ -64,4 +40,18 @@ Entity enemyBulletSample(
 	15,
 	enemyBulletImg, enemyBulletAttr);
 
-//deque<Entity> enemies;
+char fin_string[] =
+" (\\_/) " // 7
+"(='.'=)"  // 7
+"(\")_(\")"; // 7
+// http://en.wikipedia.org/wiki/ASCII_art
+int fin_attr[] = { 
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+	FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE, FWHITE,
+};
+Entity fin(
+	(WIDTH - 7 - 1) / 2, (HEIGHT - 3 - 1) / 2,
+	7, 3,
+	10,
+	fin_string, fin_attr);

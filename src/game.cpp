@@ -10,6 +10,9 @@
 #include "enemy.h"
 
 extern void Events();
+
+int lv = 1;
+
 void Welcome(void)
 {
 	InitFps();
@@ -35,6 +38,7 @@ void Welcome(void)
 		DrawString((WIDTH - len_title - 1) / 2, 10, title);
 		resetConsoleColor();
 
+		DrawString(0 , 0, "Level %d", lv);
 		DrawString((WIDTH - len_bar - 1) / 2, 14, bar);
 		DrawString((WIDTH - len_col - 1) / 2, 15, col);
 		DrawString((WIDTH - len_bar - 1) / 2, 16, bar);
@@ -67,6 +71,16 @@ void Welcome(void)
 			select = 1;
 		else if (IsKeyPressed(VK_DOWN))
 			select = 2;
+		else if (IsKeyPressed(VK_RIGHT)) {
+			lv++;
+			if (lv > 5)
+				lv = 5;
+		}
+		else if (IsKeyPressed(VK_LEFT)) {
+			lv--;
+			if (lv < 1)
+				lv = 1;
+		}
 		else if (IsKeyPressed(VK_RETURN)) {
 			if (select == 1)
 				return;
@@ -81,14 +95,20 @@ void Welcome(void)
 }
 
 extern Enemies enemies;
+extern bool beatBoss;
+extern Entity fin;
+extern float F;
 int GameMainLoop()
 {
-	InitGameState();
+INIT:
+	InitGameState(lv);
+	if (lv >= 2) enemyBulletSample.vel = 30;
+	F = 2.0f * lv;
 	player.setPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 2);
 	enemies.clear();
 	bullets.clear();
 	enemyBullets.clear();
-	while (!GameOver()) {
+	while (!GameOver() && !beatBoss) {
 		// 在窗口激活时进行以下动态时间, 调试期间论外
 		if (1 || IsWindowActive()) {
 			// 清空缓冲区和重绘缓冲区一定要有，期间所以字符都重画
@@ -101,6 +121,31 @@ int GameMainLoop()
 			RedrawConsole();
 		}
 	}
+	if (beatBoss) {
+		ScreenWidth = WIDTH;
+		int dir = R;
+		fin.scr_x = 0;
+		float t = 0.0f;
+		lv++;
+		while (1) {
+			t += GetPast();
+			ClearConsoleBuffer();
+			fin.dir = dir;
+			if (!fin.move()) {
+				switch (dir) {
+				case R: dir = L; break;
+				case L: dir = R; break;
+				}
+			}
+			fin.draw();
+			DrawString((WIDTH - 6) / 2, 14, "Good!");
+			RedrawConsole();
+			if (t > 4.0f)
+				goto INIT;
+			UpdateFps();
+		}
+	}
+	lv = 2;
 	return 0;
 }
 

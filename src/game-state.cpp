@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include <Winuser.h>
 #include "game-state.h"
-
+#include "console.h"
 GameState state;
 
 enum KEYCODE {
@@ -11,11 +11,14 @@ enum KEYCODE {
 	K_Z
 };
 
-void InitGameState(void)
+extern bool haveBoss;
+extern bool beatBoss;
+extern int bossLife;
+void InitGameState(int lv)
 {
 	state.playerState = ALIVE;
-	state.level = EASY;
 	state.twoWayShot = false;
+	state.level = lv;
 	state.hShot = false;
 	state.vShot = false;
 	state.beam = false;
@@ -24,6 +27,12 @@ void InitGameState(void)
 	state.left = false;
 	state.right = false;
 	state.hitCount = 0;
+	state.hp = 100;
+	haveBoss = false;
+	beatBoss = false;
+	bossLife = 1000;
+	ScreenWidth = SCREEN_WIDTH;
+	ScreenHeight = SCREEN_HEIGHT;
 }
 
 void UpdateState(void)

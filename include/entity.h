@@ -32,7 +32,7 @@ public:
 	int vel;
 	int dir;
 	Entity(int x, int y, int w, int h, int v, char *img, int *attribute)
-		:offset(0.0f), width(w), height(h), vel(v), image(img), attr(attribute), dir(STOP), toDel(false){}
+		:scr_x(x), scr_y(y), offset(0.0f), width(w), height(h), vel(v), image(img), attr(attribute), dir(STOP), toDel(false){}
 	/*******************************************
 	  实体相关
 	 *******************************************/
